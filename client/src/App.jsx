@@ -7,6 +7,7 @@ import Imagetwo from "./Components/Home/Imagetwo";
 import BestSeller from "./Components/Home/BestSeller";
 import Testimonials from "./Components/Home/Testimonials";
 import MenuPage from "./Components/Menu/MenuPage";
+import AboutUs from "./Components/About/AboutUs";
 
 function HomePage() {
   return (
@@ -27,6 +28,13 @@ function MenuItems(){
   )
 }
 
+function AboutPage(){
+  return(
+    <AboutUs/>
+  )
+
+}
+
 const App = () => {
   return (
     <Router>
@@ -34,6 +42,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/menu" element={<MenuItems/>} />
+        <Route path="/about" element={<AboutPage/>} />
       </Routes>
       <Footer />
     </Router>
