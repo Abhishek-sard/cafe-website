@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   FaCoffee, FaHome, FaUtensils, FaInfoCircle, FaUsers, FaBuilding, FaEnvelope, 
   FaShoppingCart, FaUser, FaPhone, FaFacebookF, FaTwitter, FaInstagram 
@@ -40,20 +41,20 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <FaCoffee className="text-3xl text-[#8B4513]" />
-            <h1 className="text-2xl font-bold text-[#8B4513]">Elite Cafe</h1>
+            <Link to="/" className="text-2xl font-bold text-[#8B4513]">Elite Cafe</Link>
           </div>
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-6">
             <li>
-              <a className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md bg-[#8B4513] text-white">
+              <Link to="/" className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
                 <FaHome /> Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
+              <Link to="/menu" className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
                 <FaUtensils /> Menu
-              </a>
+              </Link>
             </li>
 
             {/* Dropdown */}
@@ -67,34 +68,34 @@ const Navbar = () => {
 
               {dropdownOpen && (
                 <div className="absolute bg-white shadow-md w-48 rounded-md mt-2">
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  <Link to="/about" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaUsers /> About Us
-                  </a>
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  </Link>
+                  <Link to="/company-profile" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaBuilding /> Company Profile
-                  </a>
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  </Link>
+                  <Link to="/contact" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaEnvelope /> Contact
-                  </a>
+                  </Link>
                 </div>
               )}
             </li>
 
             <li>
-              <a className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
+              <Link to="/cart" className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
                 <FaShoppingCart /> Cart
                 <span className="absolute top-0 right-0 bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2">
                   3
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
 
           {/* Icons + Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] cursor-pointer hover:bg-[#8B4513] hover:text-white">
+            <Link to="/account" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] cursor-pointer hover:bg-[#8B4513] hover:text-white">
               <FaUser />
-            </div>
+            </Link>
 
             {/* Hamburger */}
             <button className="md:hidden flex flex-col gap-[6px]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -107,25 +108,25 @@ const Navbar = () => {
 
         {/* ------------------ MOBILE MENU ------------------ */}
         {isMenuOpen && (
-          <ul className="md:hidden bg-white shadow-md flex flex-col gap-4 px-6 py-4">
-            <a className="flex items-center gap-2 py-2"><FaHome /> Home</a>
-            <a className="flex items-center gap-2 py-2"><FaUtensils /> Menu</a>
+          <ul className="md:hidden bg-white shadow-md flex flex-col gap-2 px-6 py-4">
+            <Link to="/" className="flex items-center gap-2 py-2"><FaHome /> Home</Link>
+            <Link to="/menu" className="flex items-center gap-2 py-2"><FaUtensils /> Menu</Link>
 
             {/* Mobile dropdown */}
             <div onClick={() => setDropdownOpen(!dropdownOpen)}>
-              <a className="flex items-center gap-2 py-2"><FaInfoCircle /> About</a>
+              <div className="flex items-center gap-2 py-2 cursor-pointer"><FaInfoCircle /> About</div>
 
               {dropdownOpen && (
-                <div className="bg-gray-100 rounded-md ml-4 mt-2 p-2">
-                  <a className="flex gap-2 py-2"><FaUsers /> About Us</a>
-                  <a className="flex gap-2 py-2"><FaBuilding /> Company Profile</a>
-                  <a className="flex gap-2 py-2"><FaEnvelope /> Contact</a>
+                <div className="bg-gray-100 rounded-md ml-4 mt-2 p-2 flex flex-col gap-2">
+                  <Link to="/about" className="flex gap-2 py-2"><FaUsers /> About Us</Link>
+                  <Link to="/company-profile" className="flex gap-2 py-2"><FaBuilding /> Company Profile</Link>
+                  <Link to="/contact" className="flex gap-2 py-2"><FaEnvelope /> Contact</Link>
                 </div>
               )}
             </div>
 
-            <a className="flex items-center gap-2 py-2"><FaShoppingCart /> Cart</a>
-            <a className="flex items-center gap-2 py-2"><FaUser /> Account</a>
+            <Link to="/cart" className="flex items-center gap-2 py-2"><FaShoppingCart /> Cart</Link>
+            <Link to="/account" className="flex items-center gap-2 py-2"><FaUser /> Account</Link>
           </ul>
         )}
       </nav>
