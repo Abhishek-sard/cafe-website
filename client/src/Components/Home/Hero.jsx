@@ -68,7 +68,7 @@ const Hero = () => {
       </div>
 
       {/* Counter Section at Left-Bottom */}
-      <div className="absolute bottom-4 left-4 flex flex-col md:flex-row gap-6 bg-black/50 p-4 rounded-lg">
+      <div className="absolute bottom-4 left-4 flex flex-col md:flex-row gap-6 bg-black/10 p-4 rounded-lg">
         {statsData.map((stat, idx) => (
           <div key={idx} className="text-center text-white">
            

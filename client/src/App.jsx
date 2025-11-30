@@ -3,11 +3,15 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Hero from "./Components/Home/Hero";
 import React from "react";
+import Imagetwo from "./Components/Home/Imagetwo";
+import BestSeller from "./Components/Home/BestSeller";
 
 function HomePage() {
   return (
     <main>
       <Hero />
+      <Imagetwo/>
+      <BestSeller/>
       
     </main>
   );
