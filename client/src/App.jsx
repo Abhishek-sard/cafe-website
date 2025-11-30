@@ -5,6 +5,7 @@ import Hero from "./Components/Home/Hero";
 import React from "react";
 import Imagetwo from "./Components/Home/Imagetwo";
 import BestSeller from "./Components/Home/BestSeller";
+import Testimonials from "./Components/Home/Testimonials";
 
 function HomePage() {
   return (
@@ -12,6 +13,7 @@ function HomePage() {
       <Hero />
       <Imagetwo/>
       <BestSeller/>
+      <Testimonials/>
       
     </main>
   );
