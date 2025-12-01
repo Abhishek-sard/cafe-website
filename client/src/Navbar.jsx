@@ -4,10 +4,12 @@ import {
   FaCoffee, FaHome, FaUtensils, FaInfoCircle, FaUsers, FaBuilding, FaEnvelope, 
   FaShoppingCart, FaUser, FaPhone, FaFacebookF, FaTwitter, FaInstagram 
 } from "react-icons/fa";
+import { useCart } from "./Components/Cart/CartContext.jsx";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { cartCount } = useCart();
 
   return (
     <div className="w-full bg-gray-100 text-brown-700">
@@ -71,7 +73,7 @@ const Navbar = () => {
                   <Link to="/about" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaUsers /> About Us
                   </Link>
-                  <Link to="/company-profile" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  <Link to="/CompanyProfile" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaBuilding /> Company Profile
                   </Link>
                   <Link to="/contact" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
@@ -82,11 +84,16 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/cart" className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
+              <Link
+                to="/cart"
+                className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md"
+              >
                 <FaShoppingCart /> Cart
-                <span className="absolute top-0 right-0 bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2">
-                  3
-                </span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2 font-bold">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </li>
           </ul>
@@ -119,13 +126,20 @@ const Navbar = () => {
               {dropdownOpen && (
                 <div className="bg-gray-100 rounded-md ml-4 mt-2 p-2 flex flex-col gap-2">
                   <Link to="/about" className="flex gap-2 py-2"><FaUsers /> About Us</Link>
-                  <Link to="/company-profile" className="flex gap-2 py-2"><FaBuilding /> Company Profile</Link>
+                  <Link to="/CompanyProfile" className="flex gap-2 py-2"><FaBuilding /> Company Profile</Link>
                   <Link to="/contact" className="flex gap-2 py-2"><FaEnvelope /> Contact</Link>
                 </div>
               )}
             </div>
 
-            <Link to="/cart" className="flex items-center gap-2 py-2"><FaShoppingCart /> Cart</Link>
+            <Link to="/cart" className="flex items-center gap-2 py-2">
+              <FaShoppingCart /> Cart
+              {cartCount > 0 && (
+                <span className="ml-auto bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
             <Link to="/account" className="flex items-center gap-2 py-2"><FaUser /> Account</Link>
           </ul>
         )}

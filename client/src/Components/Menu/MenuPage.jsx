@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { FaSearch, FaFilter, FaPlus, FaCheck, FaStar, FaFire } from "react-icons/fa";
+import { useCart } from "../Cart/CartContext.jsx";
 
 const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [cartItems, setCartItems] = useState({});
+  const [addedItems, setAddedItems] = useState({});
   const [sortBy, setSortBy] = useState("popular");
+  const { addToCart, items: cartMap, cartCount, cartTotal } = useCart();
 
   const menuCategories = [
     { id: "all", label: "All Items", icon: "☕" },
@@ -229,15 +231,16 @@ const MenuPage = () => {
     },
   ];
 
-  const handleAddToCart = (itemId) => {
-    setCartItems(prev => ({
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    setAddedItems((prev) => ({
       ...prev,
-      [itemId]: true
+      [item.id]: true,
     }));
     setTimeout(() => {
-      setCartItems(prev => ({
+      setAddedItems((prev) => ({
         ...prev,
-        [itemId]: false
+        [item.id]: false,
       }));
     }, 1000);
   };
@@ -387,14 +390,25 @@ const MenuPage = () => {
                   <StarRating rating={item.rating} />
                   
                   <button
-                    onClick={() => handleAddToCart(item.id)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white transition-all ${
-                      cartItems[item.id]
+                    onClick={() => handleAddToCart(item)}
+                    className={`w-10 h-10 rounded-full flex flex-col items-center justify-center text-white text-xs transition-all ${
+                      addedItems[item.id]
                         ? "bg-green-500"
                         : "bg-orange-500 hover:bg-orange-600"
                     }`}
                   >
-                    {cartItems[item.id] ? <FaCheck size={12} /> : <FaPlus size={12} />}
+                    {addedItems[item.id] ? (
+                      <FaCheck size={14} />
+                    ) : (
+                      <>
+                        <FaPlus size={12} />
+                        {cartMap[item.id]?.quantity > 0 && (
+                          <span className="text-[10px]">
+                            x{cartMap[item.id].quantity}
+                          </span>
+                        )}
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
@@ -418,11 +432,19 @@ const MenuPage = () => {
 
       {/* Floating Cart Button */}
       <div className="fixed bottom-6 right-6">
-        <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-full shadow-lg font-semibold flex items-center gap-2 transition-all transform hover:scale-105">
-          <span>View Cart</span>
-          <span className="bg-white text-orange-600 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-            3
+        <button
+          className={`${
+            cartCount > 0 ? "bg-orange-600 hover:bg-orange-700" : "bg-gray-400"
+          } text-white px-6 py-3 rounded-full shadow-lg font-semibold flex items-center gap-3 transition-all transform hover:scale-105`}
+          disabled={cartCount === 0}
+        >
+          <span>{cartCount > 0 ? "View Cart" : "Cart Empty"}</span>
+          <span className="bg-white text-orange-600 rounded-full min-w-8 h-8 flex items-center justify-center text-sm font-bold px-2">
+            {cartCount}
           </span>
+          {cartCount > 0 && (
+            <span className="text-sm font-normal">(${cartTotal.toFixed(2)})</span>
+          )}
         </button>
       </div>
     </div>

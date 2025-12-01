@@ -8,29 +8,34 @@ import BestSeller from "./Components/Home/BestSeller";
 import Testimonials from "./Components/Home/Testimonials";
 import MenuPage from "./Components/Menu/MenuPage";
 import AboutUs from "./Components/About/AboutUs";
+import CompanyProfile from "./Components/About/CompanyProfile";
+import Contact from "./Components/About/Contact";
 
 function HomePage() {
   return (
     <main>
       <Hero />
-      <Imagetwo/>
-      <BestSeller/>
-      <Testimonials/>
-      
+      <Imagetwo />
+      <BestSeller />
+      <Testimonials />
+
     </main>
   );
 }
 
 
-function MenuItems(){
-  return(
-    <MenuPage/>
+function MenuItems() {
+  return (
+    <MenuPage />
   )
 }
 
-function AboutPage(){
-  return(
-    <AboutUs/>
+function AboutPage() {
+  return (
+    <>
+      <AboutUs />
+    </>
+
   )
 
 }
@@ -41,8 +46,10 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/menu" element={<MenuItems/>} />
-        <Route path="/about" element={<AboutPage/>} />
+        <Route path="/menu" element={<MenuItems />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/CompanyProfile" element={<CompanyProfile />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer />
     </Router>
