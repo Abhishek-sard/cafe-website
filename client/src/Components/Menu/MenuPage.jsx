@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import { FaSearch, FaFilter, FaPlus, FaCheck, FaStar, FaFire } from "react-icons/fa";
+import {
+  FaSearch,
+  FaFilter,
+  FaPlus,
+  FaCheck,
+  FaStar,
+  FaFire,
+} from "react-icons/fa";
 import { useCart } from "../Cart/CartContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [addedItems, setAddedItems] = useState({});
   const [sortBy, setSortBy] = useState("popular");
-  const { addToCart, items: cartMap, cartCount, cartTotal } = useCart();
+  const [addedItems, setAddedItems] = useState({});
+  const navigate = useNavigate();
+  const { cartCount, cartTotal, addToCart, items: cartMap } = useCart();
+
 
   const menuCategories = [
     { id: "all", label: "All Items", icon: "☕" },
@@ -18,6 +28,21 @@ const MenuPage = () => {
     { id: "pastry", label: "Pastries", icon: "🥐" },
     { id: "special", label: "Specialty", icon: "⭐" },
   ];
+
+  const handleAddToCart = (item) => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      description: item.description,
+      image: item.image,
+    });
+    setAddedItems((prev) => ({ ...prev, [item.id]: true }));
+    setTimeout(
+      () => setAddedItems((prev) => ({ ...prev, [item.id]: false })),
+      900
+    );
+  };
 
   const menuItems = [
     // Espresso Category
@@ -231,20 +256,6 @@ const MenuPage = () => {
     },
   ];
 
-  const handleAddToCart = (item) => {
-    addToCart(item);
-    setAddedItems((prev) => ({
-      ...prev,
-      [item.id]: true,
-    }));
-    setTimeout(() => {
-      setAddedItems((prev) => ({
-        ...prev,
-        [item.id]: false,
-      }));
-    }, 1000);
-  };
-
   const filteredItems = menuItems.filter(item => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -388,7 +399,7 @@ const MenuPage = () => {
 
                 <div className="flex items-center justify-between">
                   <StarRating rating={item.rating} />
-                  
+
                   <button
                     onClick={() => handleAddToCart(item)}
                     className={`w-10 h-10 rounded-full flex flex-col items-center justify-center text-white text-xs transition-all ${
@@ -437,13 +448,16 @@ const MenuPage = () => {
             cartCount > 0 ? "bg-orange-600 hover:bg-orange-700" : "bg-gray-400"
           } text-white px-6 py-3 rounded-full shadow-lg font-semibold flex items-center gap-3 transition-all transform hover:scale-105`}
           disabled={cartCount === 0}
+          onClick={() => cartCount > 0 && navigate("/cart")}
         >
           <span>{cartCount > 0 ? "View Cart" : "Cart Empty"}</span>
           <span className="bg-white text-orange-600 rounded-full min-w-8 h-8 flex items-center justify-center text-sm font-bold px-2">
             {cartCount}
           </span>
           {cartCount > 0 && (
-            <span className="text-sm font-normal">(${cartTotal.toFixed(2)})</span>
+            <span className="text-sm font-normal">
+              (${cartTotal.toFixed(2)})
+            </span>
           )}
         </button>
       </div>

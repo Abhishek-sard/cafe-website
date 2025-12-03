@@ -10,6 +10,7 @@ import MenuPage from "./Components/Menu/MenuPage";
 import AboutUs from "./Components/About/AboutUs";
 import CompanyProfile from "./Components/About/CompanyProfile";
 import Contact from "./Components/About/Contact";
+import CartPage from "./Components/Cart/CartPage.jsx";
 
 function HomePage() {
   return (
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/CompanyProfile" element={<CompanyProfile />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
       <Footer />
     </Router>

@@ -13,7 +13,7 @@ import {
   FaPhone,
   FaFacebookF,
   FaTwitter,
-  FaInstagram
+  FaInstagram,
 } from "react-icons/fa";
 import { useCart } from "./Components/Cart/CartContext.jsx";
 
@@ -100,21 +100,22 @@ const Navbar = () => {
               )}
             </li>
 
-            {/* Cart */}
-            <li>
-              <Link to="/cart" className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
-                <FaShoppingCart /> Cart
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2 font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-            </li>
+            
           </ul>
 
           {/* Icons + Mobile Menu Button */}
           <div className="flex items-center gap-4">
+            <Link
+              to="/cart"
+              className="relative text-[#5D4037] hover:text-[#8B4513]"
+            >
+              <FaShoppingCart className="text-2xl" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-2">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
             <Link to="/account" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white">
               <FaUser />
             </Link>
@@ -154,6 +155,11 @@ const Navbar = () => {
 
             <Link to="/cart" className="flex items-center gap-2 py-2">
               <FaShoppingCart /> Cart
+              {cartCount > 0 && (
+                <span className="ml-auto bg-orange-500 text-white text-xs rounded-full px-2">
+                  {cartCount}
+                </span>
+              )}
             </Link>
             <Link to="/account" className="flex items-center gap-2 py-2">
               <FaUser /> Account

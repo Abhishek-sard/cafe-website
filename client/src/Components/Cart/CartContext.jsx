@@ -1,29 +1,42 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-const CartContext = createContext({
-  items: {},
-  cartCount: 0,
-  cartTotal: 0,
-  cartList: [],
-  addToCart: () => {},
-  updateQuantity: () => {},
-  removeFromCart: () => {},
-  clearCart: () => {},
-});
+const CartContext = createContext(null);
+const STORAGE_KEY = "eliteCafeCart";
 
 export const CartProvider = ({ children }) => {
-  const [items, setItems] = useState({});
+  const [items, setItems] = useState(() => {
+    try {
+      const cached = localStorage.getItem(STORAGE_KEY);
+      return cached ? JSON.parse(cached) : {};
+    } catch (err) {
+      console.warn("Failed to parse cart cache", err);
+      return {};
+    }
+  });
 
-  const addToCart = (product) => {
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+
+  const addToCart = (product, quantity = 1) => {
     if (!product?.id) return;
-
     setItems((prev) => {
       const existing = prev[product.id];
-      const nextQuantity = existing ? existing.quantity + 1 : 1;
+      const nextQuantity = (existing?.quantity || 0) + quantity;
       return {
         ...prev,
         [product.id]: {
-          ...product,
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          description: product.description,
+          image: product.image,
           quantity: nextQuantity,
         },
       };
@@ -32,17 +45,16 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = (productId, quantity) => {
     setItems((prev) => {
+      if (!prev[productId]) return prev;
       if (quantity <= 0) {
         const clone = { ...prev };
         delete clone[productId];
         return clone;
       }
-      const existing = prev[productId];
-      if (!existing) return prev;
       return {
         ...prev,
         [productId]: {
-          ...existing,
+          ...prev[productId],
           quantity,
         },
       };
@@ -51,6 +63,7 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = (productId) => {
     setItems((prev) => {
+      if (!prev[productId]) return prev;
       const clone = { ...prev };
       delete clone[productId];
       return clone;
@@ -67,7 +80,11 @@ export const CartProvider = ({ children }) => {
   );
 
   const cartTotal = useMemo(
-    () => cartList.reduce((total, item) => total + item.price * item.quantity, 0),
+    () =>
+      cartList.reduce(
+        (total, item) => total + item.quantity * (item.price || 0),
+        0
+      ),
     [cartList]
   );
 
@@ -87,5 +104,4 @@ export const CartProvider = ({ children }) => {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);
-
 
