@@ -13,10 +13,20 @@ export const register = async (req, res) => {
     const hashPass = await bcrypt.hash(password, 10);
     const emailToken = crypto.randomBytes(32).toString("hex");
 
-    const user = await User.create({ name, email, password: hashPass, role, emailToken });
+    const user = await User.create({
+      name,
+      email,
+      password: hashPass,
+      role,
+      emailToken,
+    });
 
     const url = `${process.env.CLIENT_URL}/verify/${emailToken}`;
-    await sendEmail(email, "Verify your email", `Click this link to verify: ${url}`);
+    await sendEmail(
+      email,
+      "Verify your email",
+      `Click this link to verify: ${url}`
+    );
 
     res.json({ message: "Registration successful. Check email to verify." });
   } catch (error) {
@@ -41,15 +51,29 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
-    if (!user.isVerified) return res.status(401).json({ message: "Please verify your email" });
+    if (!user.isVerified)
+      return res.status(401).json({ message: "Please verify your email" });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Invalid credentials" });
 
-    const accessToken = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
-    const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+    const accessToken = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: "7d" }
+    );
 
-    res.cookie("refreshToken", refreshToken, { httpOnly: true, sameSite: "lax" }).json({ accessToken, user });
+    res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        sameSite: "lax",
+      })
+      .json({ accessToken, user });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -62,7 +86,11 @@ export const refreshToken = (req, res) => {
   jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid token" });
 
-    const accessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    const accessToken = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
     res.json({ accessToken });
   });
 };
@@ -96,8 +124,12 @@ export const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
 
-  const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
-  if (!user) return res.status(400).json({ message: "Invalid or expired token" });
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+  if (!user)
+    return res.status(400).json({ message: "Invalid or expired token" });
 
   user.password = await bcrypt.hash(password, 10);
   user.resetPasswordToken = null;

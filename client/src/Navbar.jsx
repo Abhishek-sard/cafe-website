@@ -116,7 +116,7 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link to="/account" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white">
+            <Link to="/login" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white">
               <FaUser />
             </Link>
 
@@ -161,8 +161,8 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link to="/account" className="flex items-center gap-2 py-2">
-              <FaUser /> Account
+            <Link to="/login" className="flex items-center gap-2 py-2">
+              <FaUser /> Login
             </Link>
           </ul>
         )}

@@ -79,9 +79,7 @@ const Footer = () => {
               className="flex-1 p-2 rounded-md text-black text-sm outline-none"
               required
             />
-            <button className="bg-[#F4A460] text-[#3E2723] px-4 py-2 rounded-md font-semibold hover:bg-[#FFF8DC] transition">
-              Subscribe
-            </button>
+            
           </form>
 
           <h4 className="text-[#F4A460] font-semibold mb-2 text-sm">We Accept</h4>
