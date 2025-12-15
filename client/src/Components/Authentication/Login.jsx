@@ -14,6 +14,7 @@ const Login = () => {
         try {
             const res = await axios.post("/auth/login", data);
             localStorage.setItem("accesstoken", res.data.accessToken);
+            localStorage.setItem("role", res.data.user.role);
             navigate(res.data.user.role === "admin" ? "/admin" : "/user/dashboard");
         } catch (error) {
             alert(error.response.data.message);

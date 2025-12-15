@@ -14,21 +14,22 @@ export const register = async (req, res) => {
     const emailToken = crypto.randomBytes(32).toString("hex");
 
     const user = await User.create({
-      name,
+      name, // Auto-verified for development
       email,
       password: hashPass,
       role,
       emailToken,
+      isVerified: true,
     });
 
-    const url = `${process.env.CLIENT_URL}/verify/${emailToken}`;
-    await sendEmail(
-      email,
-      "Verify your email",
-      `Click this link to verify: ${url}`
-    );
+    // const url = `${process.env.CLIENT_URL}/verify/${emailToken}`;
+    // await sendEmail(
+    //   email,
+    //   "Verify your email",
+    //   `Click this link to verify: ${url}`
+    // );
 
-    res.json({ message: "Registration successful. Check email to verify." });
+    res.json({ message: "Registration successful. You can now login." });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -79,20 +80,25 @@ export const login = async (req, res) => {
   }
 };
 
-export const refreshToken = (req, res) => {
+export const refreshToken = async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) return res.status(401).json({ message: "No token" });
 
-  jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return res.status(403).json({ message: "Invalid token" });
 
     const accessToken = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
     res.json({ accessToken });
-  });
+  } catch (err) {
+    return res.status(403).json({ message: "Invalid token" });
+  }
 };
 
 export const logout = (req, res) => {

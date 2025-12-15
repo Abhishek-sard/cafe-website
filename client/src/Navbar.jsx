@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaCoffee,
   FaHome,
@@ -14,6 +14,8 @@ import {
   FaFacebookF,
   FaTwitter,
   FaInstagram,
+  FaSignOutAlt,
+  FaTachometerAlt
 } from "react-icons/fa";
 import { useCart } from "./Components/Cart/CartContext.jsx";
 
@@ -21,10 +23,21 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { cartCount } = useCart();
+  const location = useLocation(); // Forces re-render on route change
+  const navigate = useNavigate();
+
+  const isLoggedIn = !!localStorage.getItem("accesstoken");
+  const userRole = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.removeItem("accesstoken");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
 
   return (
     <div className="w-full bg-gray-100 text-brown-700">
-      
+
       {/* ---------- TOP BAR ---------- */}
       <div className="bg-[#8B4513] text-white text-sm py-2">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4">
@@ -60,7 +73,7 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-6">
-            
+
             {/* Home */}
             <li>
               <Link to="/" className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
@@ -100,7 +113,7 @@ const Navbar = () => {
               )}
             </li>
 
-            
+
           </ul>
 
           {/* Icons + Mobile Menu Button */}
@@ -116,9 +129,22 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link to="/login" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white">
-              <FaUser />
-            </Link>
+
+            {isLoggedIn ? (
+              <div className="flex items-center gap-3">
+                <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Dashboard">
+                  <FaTachometerAlt />
+                </Link>
+                <button onClick={handleLogout} className="w-10 h-10 bg-red-100 flex items-center justify-center rounded-full text-red-600 hover:bg-red-600 hover:text-white" title="Logout">
+                  <FaSignOutAlt />
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Login">
+                <FaUser />
+              </Link>
+            )}
+
 
             {/* Mobile toggle */}
             <button className="md:hidden flex flex-col gap-[6px]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -161,9 +187,17 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link to="/login" className="flex items-center gap-2 py-2">
-              <FaUser /> Login
-            </Link>
+
+            {isLoggedIn ? (
+              <>
+                <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="flex items-center gap-2 py-2"><FaTachometerAlt /> Dashboard</Link>
+                <button onClick={handleLogout} className="flex items-center gap-2 py-2 text-red-600"><FaSignOutAlt /> Logout</button>
+              </>
+            ) : (
+              <Link to="/login" className="flex items-center gap-2 py-2">
+                <FaUser /> Login
+              </Link>
+            )}
           </ul>
         )}
       </nav>
