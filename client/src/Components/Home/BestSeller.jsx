@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaCoffee, FaMugHot, FaPlus, FaCheck } from "react-icons/fa";
+import { useCart } from "../Cart/CartContext.jsx";
 
 const productsData = [
     {
@@ -68,6 +69,7 @@ const productsData = [
 const BestSellers = () => {
     const [activeCategory, setActiveCategory] = useState("all");
     const [cartAdded, setCartAdded] = useState({});
+    const { addToCart, items: cartItems } = useCart();
 
     const categories = [
         { id: "all", label: "All Coffees" },
@@ -76,12 +78,17 @@ const BestSellers = () => {
         { id: "milk", label: "Milk Coffee" },
     ];
 
-    const handleAddToCart = (id) => {
-        setCartAdded((prev) => ({ ...prev, [id]: true }));
+    const handleAddToCart = (product) => {
+        addToCart({
+            id: `best-${product.id}`,
+            name: product.title,
+            price: product.price,
+            description: product.description,
+        });
+        setCartAdded((prev) => ({ ...prev, [product.id]: true }));
         setTimeout(() => {
-            setCartAdded((prev) => ({ ...prev, [id]: false }));
+            setCartAdded((prev) => ({ ...prev, [product.id]: false }));
         }, 1000);
-        console.log("Item added to cart:", id);
     };
 
     const filteredProducts =
@@ -169,13 +176,24 @@ const BestSellers = () => {
                                         ${product.price.toFixed(2)}
                                     </span>
                                     <button
-                                        onClick={() => handleAddToCart(product.id)}
-                                        className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-white transition-all ${cartAdded[product.id]
+                                        onClick={() => handleAddToCart(product)}
+                                        className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex flex-col items-center justify-center text-white text-xs transition-all ${cartAdded[product.id]
                                                 ? "bg-green-500"
                                                 : "bg-orange-600 hover:bg-orange-700"
                                             }`}
                                     >
-                                        {cartAdded[product.id] ? <FaCheck size={12} /> : <FaPlus size={12} />}
+                                        {cartAdded[product.id] ? (
+                                            <FaCheck size={14} />
+                                        ) : (
+                                            <>
+                                                <FaPlus size={12} />
+                                                {cartItems[`best-${product.id}`]?.quantity > 0 && (
+                                                    <span className="text-[10px]">
+                                                        x{cartItems[`best-${product.id}`].quantity}
+                                                    </span>
+                                                )}
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                             </div>

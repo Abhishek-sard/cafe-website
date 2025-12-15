@@ -1,20 +1,48 @@
-import React, { useState } from "react";
-import { 
-  FaCoffee, FaHome, FaUtensils, FaInfoCircle, FaUsers, FaBuilding, FaEnvelope, 
-  FaShoppingCart, FaUser, FaPhone, FaFacebookF, FaTwitter, FaInstagram 
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  FaCoffee,
+  FaHome,
+  FaUtensils,
+  FaInfoCircle,
+  FaUsers,
+  FaBuilding,
+  FaEnvelope,
+  FaShoppingCart,
+  FaUser,
+  FaPhone,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaSignOutAlt,
+  FaTachometerAlt
 } from "react-icons/fa";
+import { useCart } from "./Components/Cart/CartContext.jsx";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { cartCount } = useCart();
+  const location = useLocation(); // Forces re-render on route change
+  const navigate = useNavigate();
+
+  const isLoggedIn = !!localStorage.getItem("accesstoken");
+  const userRole = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.removeItem("accesstoken");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
 
   return (
     <div className="w-full bg-gray-100 text-brown-700">
 
-      {/* ------------------ TOP CONTACT BAR ------------------ */}
+      {/* ---------- TOP BAR ---------- */}
       <div className="bg-[#8B4513] text-white text-sm py-2">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4">
-          {/* Left side: contact info */}
+
+          {/* Contact */}
           <div className="flex gap-4 items-center">
             <div className="flex items-center gap-1">
               <FaEnvelope /> <span>elitecafe23@gmail.com</span>
@@ -24,79 +52,101 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Right side: social icons */}
+          {/* Social icons */}
           <div className="flex gap-3 items-center">
-            <a href="#" className="hover:text-yellow-400"><FaFacebookF /></a>
-            <a href="#" className="hover:text-yellow-400"><FaTwitter /></a>
-            <a href="#" className="hover:text-yellow-400"><FaInstagram /></a>
+            <FaFacebookF className="hover:text-yellow-400 cursor-pointer" />
+            <FaTwitter className="hover:text-yellow-400 cursor-pointer" />
+            <FaInstagram className="hover:text-yellow-400 cursor-pointer" />
           </div>
         </div>
       </div>
 
-      {/* ------------------ MAIN NAVBAR ------------------ */}
+      {/* ---------- MAIN NAVBAR ---------- */}
       <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4 py-4">
 
           {/* Logo */}
           <div className="flex items-center gap-2">
             <FaCoffee className="text-3xl text-[#8B4513]" />
-            <h1 className="text-2xl font-bold text-[#8B4513]">Elite Cafe</h1>
+            <Link to="/" className="text-2xl font-bold text-[#8B4513]">Elite Cafe</Link>
           </div>
 
           {/* Desktop Menu */}
           <ul className="hidden md:flex items-center gap-6">
+
+            {/* Home */}
             <li>
-              <a className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md bg-[#8B4513] text-white">
+              <Link to="/" className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
                 <FaHome /> Home
-              </a>
-            </li>
-            <li>
-              <a className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
-                <FaUtensils /> Menu
-              </a>
+              </Link>
             </li>
 
-            {/* Dropdown */}
-            <li className="relative">
-              <button
-                className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
+            {/* Menu */}
+            <li>
+              <Link to="/menu" className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
+                <FaUtensils /> Menu
+              </Link>
+            </li>
+
+            {/* ABOUT DROPDOWN — Hover Enabled */}
+            <li
+              className="relative group"
+              onMouseEnter={() => setDropdownOpen(true)}
+              onMouseLeave={() => setDropdownOpen(false)}
+            >
+              <button className="flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
                 <FaInfoCircle /> About
               </button>
 
               {dropdownOpen && (
-                <div className="absolute bg-white shadow-md w-48 rounded-md mt-2">
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                <div className="absolute bg-white shadow-md w-48 rounded-md mt-2 opacity-100 transition-all duration-200">
+                  <Link to="/about" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaUsers /> About Us
-                  </a>
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  </Link>
+                  <Link to="/CompanyProfile" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaBuilding /> Company Profile
-                  </a>
-                  <a className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
+                  </Link>
+                  <Link to="/contact" className="flex items-center gap-2 px-4 py-2 hover:bg-yellow-100">
                     <FaEnvelope /> Contact
-                  </a>
+                  </Link>
                 </div>
               )}
             </li>
 
-            <li>
-              <a className="relative flex items-center gap-2 text-[#5D4037] hover:text-[#8B4513] hover:bg-yellow-100 px-4 py-2 rounded-md">
-                <FaShoppingCart /> Cart
-                <span className="absolute top-0 right-0 bg-yellow-500 text-[#3E2723] text-xs rounded-full px-2">
-                  3
-                </span>
-              </a>
-            </li>
+
           </ul>
 
           {/* Icons + Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] cursor-pointer hover:bg-[#8B4513] hover:text-white">
-              <FaUser />
-            </div>
+            <Link
+              to="/cart"
+              className="relative text-[#5D4037] hover:text-[#8B4513]"
+            >
+              <FaShoppingCart className="text-2xl" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-2">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
-            {/* Hamburger */}
+            {isLoggedIn ? (
+              <div className="flex items-center gap-3">
+                <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Dashboard">
+                  <FaTachometerAlt />
+                </Link>
+                <button onClick={handleLogout} className="w-10 h-10 bg-red-100 flex items-center justify-center rounded-full text-red-600 hover:bg-red-600 hover:text-white" title="Logout">
+                  <FaSignOutAlt />
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Login">
+                <FaUser />
+              </Link>
+            )}
+
+
+            {/* Mobile toggle */}
             <button className="md:hidden flex flex-col gap-[6px]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <span className="w-7 h-[3px] bg-[#8B4513] rounded"></span>
               <span className="w-7 h-[3px] bg-[#8B4513] rounded"></span>
@@ -105,27 +155,49 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* ------------------ MOBILE MENU ------------------ */}
+        {/* ---------- MOBILE MENU ---------- */}
         {isMenuOpen && (
-          <ul className="md:hidden bg-white shadow-md flex flex-col gap-4 px-6 py-4">
-            <a className="flex items-center gap-2 py-2"><FaHome /> Home</a>
-            <a className="flex items-center gap-2 py-2"><FaUtensils /> Menu</a>
+          <ul className="md:hidden bg-white shadow-md flex flex-col gap-2 px-6 py-4">
+            <Link to="/" className="flex items-center gap-2 py-2"><FaHome /> Home</Link>
+            <Link to="/menu" className="flex items-center gap-2 py-2"><FaUtensils /> Menu</Link>
 
-            {/* Mobile dropdown */}
-            <div onClick={() => setDropdownOpen(!dropdownOpen)}>
-              <a className="flex items-center gap-2 py-2"><FaInfoCircle /> About</a>
+            {/* Mobile Dropdown */}
+            <div>
+              <div
+                className="flex items-center gap-2 py-2 cursor-pointer"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <FaInfoCircle /> About
+              </div>
 
               {dropdownOpen && (
-                <div className="bg-gray-100 rounded-md ml-4 mt-2 p-2">
-                  <a className="flex gap-2 py-2"><FaUsers /> About Us</a>
-                  <a className="flex gap-2 py-2"><FaBuilding /> Company Profile</a>
-                  <a className="flex gap-2 py-2"><FaEnvelope /> Contact</a>
+                <div className="bg-gray-100 rounded-md ml-4 mt-2 p-2 flex flex-col gap-2">
+                  <Link to="/about" className="flex gap-2 py-2"><FaUsers /> About Us</Link>
+                  <Link to="/CompanyProfile" className="flex gap-2 py-2"><FaBuilding /> Company Profile</Link>
+                  <Link to="/contact" className="flex gap-2 py-2"><FaEnvelope /> Contact</Link>
                 </div>
               )}
             </div>
 
-            <a className="flex items-center gap-2 py-2"><FaShoppingCart /> Cart</a>
-            <a className="flex items-center gap-2 py-2"><FaUser /> Account</a>
+            <Link to="/cart" className="flex items-center gap-2 py-2">
+              <FaShoppingCart /> Cart
+              {cartCount > 0 && (
+                <span className="ml-auto bg-orange-500 text-white text-xs rounded-full px-2">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {isLoggedIn ? (
+              <>
+                <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="flex items-center gap-2 py-2"><FaTachometerAlt /> Dashboard</Link>
+                <button onClick={handleLogout} className="flex items-center gap-2 py-2 text-red-600"><FaSignOutAlt /> Logout</button>
+              </>
+            ) : (
+              <Link to="/login" className="flex items-center gap-2 py-2">
+                <FaUser /> Login
+              </Link>
+            )}
           </ul>
         )}
       </nav>
