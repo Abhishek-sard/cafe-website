@@ -1,4 +1,5 @@
 import React from "react";
+import { FaMugHot, FaBullseye, FaEye } from "react-icons/fa";
 
 const CompanyProfile = () => {
   return (
@@ -14,11 +15,11 @@ const CompanyProfile = () => {
         }}
       >
         <div>
-          <div className="text-6xl text-accent-gold mb-4">
-            <i className="fa-solid fa-mug-hot"></i>
+          <div className="text-6xl text-accent-gold mb-4 text-center flex justify-center text-yellow-500">
+            <FaMugHot />
           </div>
-          <h1 className="text-5xl font-bold mb-4">Welcome to Elite Cafe</h1>
-          <p className="text-xl">
+          <h1 className="text-5xl font-bold mb-4 text-white">Welcome to Elite Cafe</h1>
+          <p className="text-xl text-white">
             The perfect blend of taste, quality & tradition.
           </p>
         </div>
@@ -52,19 +53,19 @@ const CompanyProfile = () => {
             {/* TIMELINE */}
             <div>
               <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-accent-gold rounded-full"></span>
+                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
                 <p className="font-bold text-primary-brown">2010</p>
                 <p>Founded Elite Cafe with a small team.</p>
               </div>
 
               <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-accent-gold rounded-full"></span>
+                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
                 <p className="font-bold text-primary-brown">2015</p>
                 <p>Expanded to multiple locations.</p>
               </div>
 
               <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-accent-gold rounded-full"></span>
+                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
                 <p className="font-bold text-primary-brown">2020</p>
                 <p>Launched premium product line.</p>
               </div>
@@ -82,8 +83,8 @@ const CompanyProfile = () => {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
           {/* Mission */}
           <div className="bg-white rounded-xl shadow-md p-8 text-center hover:-translate-y-2 transition">
-            <div className="w-20 h-20 rounded-full bg-light-brown text-primary-brown flex items-center justify-center mx-auto mb-4 text-3xl">
-              <i className="fa-solid fa-bullseye"></i>
+            <div className="w-20 h-20 rounded-full bg-light-brown text-primary-brown flex items-center justify-center mx-auto mb-4 text-3xl text-[#8B4513] bg-orange-100">
+              <FaBullseye />
             </div>
             <h3 className="text-2xl font-semibold mb-3">Mission</h3>
             <p>To serve exceptional coffee with warmth and hospitality.</p>
@@ -91,8 +92,8 @@ const CompanyProfile = () => {
 
           {/* Vision */}
           <div className="bg-white rounded-xl shadow-md p-8 text-center hover:-translate-y-2 transition">
-            <div className="w-20 h-20 rounded-full bg-light-brown text-primary-brown flex items-center justify-center mx-auto mb-4 text-3xl">
-              <i className="fa-solid fa-eye"></i>
+            <div className="w-20 h-20 rounded-full bg-light-brown text-primary-brown flex items-center justify-center mx-auto mb-4 text-3xl text-[#8B4513] bg-orange-100">
+              <FaEye />
             </div>
             <h3 className="text-2xl font-semibold mb-3">Vision</h3>
             <p>To be the most loved coffee brand nationwide.</p>
@@ -103,13 +104,13 @@ const CompanyProfile = () => {
             <h3 className="text-2xl font-semibold mb-3 text-center">Values</h3>
             <ul className="mt-4 space-y-3">
               <li className="flex items-center gap-2">
-                <span className="text-accent-gold font-bold">✓</span> Quality
+                <span className="text-yellow-500 font-bold">✓</span> Quality
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-accent-gold font-bold">✓</span> Integrity
+                <span className="text-yellow-500 font-bold">✓</span> Integrity
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-accent-gold font-bold">✓</span> Customer
+                <span className="text-yellow-500 font-bold">✓</span> Customer
                 Care
               </li>
             </ul>
@@ -119,5 +120,4 @@ const CompanyProfile = () => {
     </div>
   );
 };
-
 export default CompanyProfile;
