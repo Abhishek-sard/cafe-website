@@ -13,4 +13,30 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      try {
+        const { data } = await axiosInstance.get("/auth/refresh-token");
+        localStorage.setItem("accesstoken", data.accessToken);
+        originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        console.error("Refresh token failed", refreshError);
+        localStorage.removeItem("accesstoken");
+        localStorage.removeItem("role");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;

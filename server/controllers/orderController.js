@@ -4,7 +4,7 @@ import Order from "../models/Order.js";
 export const createOrder = async (req, res) => {
     try {
         console.log("Creating order for user:", req.user.id); // DEBUG LOG
-        const { items, totalAmount, shippingAddress, paymentMethod } = req.body;
+        const { items, totalAmount, shippingAddress, paymentMethod, isPaid, paidAt, paymentResult } = req.body;
 
         if (items && items.length === 0) {
             return res.status(400).json({ message: "No order items" });
@@ -16,8 +16,9 @@ export const createOrder = async (req, res) => {
             totalAmount,
             shippingAddress,
             paymentMethod,
-            isPaid: true, // Auto-paid for mock payment
-            paidAt: Date.now(),
+            isPaid: isPaid || false,
+            paidAt: paidAt || null,
+            paymentResult: paymentResult || {},
         });
 
         const createdOrder = await order.save();
