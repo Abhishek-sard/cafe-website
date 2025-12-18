@@ -6,6 +6,11 @@ import {
   FaCheck,
   FaStar,
   FaFire,
+  FaCoffee,
+  FaLeaf,
+  FaSnowflake,
+  FaBreadSlice,
+  FaMugHot
 } from "react-icons/fa";
 import { useCart } from "../Cart/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -20,13 +25,13 @@ const MenuPage = () => {
 
 
   const menuCategories = [
-    { id: "all", label: "All Items", icon: "☕" },
-    { id: "espresso", label: "Espresso", icon: "⚡" },
-    { id: "brew", label: "Brewed Coffee", icon: "🔥" },
-    { id: "cold", label: "Cold Brew", icon: "❄️" },
-    { id: "tea", label: "Tea", icon: "🍃" },
-    { id: "pastry", label: "Pastries", icon: "🥐" },
-    { id: "special", label: "Specialty", icon: "⭐" },
+    { id: "all", label: "All Items", icon: <FaCoffee /> },
+    { id: "espresso", label: "Espresso", icon: <FaMugHot /> },
+    { id: "brew", label: "Brewed", icon: <FaCoffee /> },
+    { id: "cold", label: "Cold Brew", icon: <FaSnowflake /> },
+    { id: "tea", label: "Tea", icon: <FaLeaf /> },
+    { id: "pastry", label: "Pastries", icon: <FaBreadSlice /> },
+    { id: "special", label: "Specialty", icon: <FaStar /> },
   ];
 
   const handleAddToCart = (item) => {
@@ -140,7 +145,7 @@ const MenuPage = () => {
     },
     {
       id: 9,
-      name: "Vanilla Sweet Cream Cold Brew",
+      name: "Vanilla Sweet Cream",
       category: "cold",
       description: "Cold brew topped with house-made vanilla sweet cream",
       price: 5.75,
@@ -259,7 +264,7 @@ const MenuPage = () => {
   const filteredItems = menuItems.filter(item => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      item.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -285,35 +290,35 @@ const MenuPage = () => {
         {[...Array(5)].map((_, index) => (
           <FaStar
             key={index}
-            className={`text-xs ${
-              index < Math.floor(rating) ? "text-yellow-400" : "text-gray-300"
-            }`}
+            className={`text-xs ${index < Math.floor(rating) ? "text-[#DEB887]" : "text-gray-200"
+              }`}
           />
         ))}
-        <span className="text-xs text-gray-600 ml-1">{rating}</span>
+        <span className="text-xs text-gray-400 ml-1">({rating})</span>
       </div>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+    <div className="min-h-screen bg-[#FDFBF7]">
       {/* Header */}
-      <header className="bg-[#8B4513] shadow-sm sticky top-0 z-10">
+      <header className="bg-white shadow-sm sticky top-0 z-30 transition-shadow">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <p className="text-white">Discover our carefully crafted beverages and treats</p>
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl font-serif font-bold text-gray-900">Our Menu</h1>
+              <p className="text-sm text-gray-500">Handcrafted beverages & fresh pastries</p>
             </div>
-            
+
             {/* Search Bar */}
-            <div className="relative w-full md:w-64">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white" />
+            <div className="relative w-full md:w-80 group">
+              <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-[#8B4513] transition-colors" />
               <input
                 type="text"
-                placeholder="Search menu items..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-transparent rounded-full focus:bg-white focus:border-[#DEB887] focus:ring-4 focus:ring-[#DEB887]/20 outline-none transition-all shadow-inner"
               />
             </div>
           </div>
@@ -321,104 +326,99 @@ const MenuPage = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Category Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 overflow-x-auto pb-2">
-          {menuCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all whitespace-nowrap ${
-                activeCategory === category.id
-                  ? "bg-orange-600 text-white shadow-lg transform -translate-y-0.5"
-                  : "bg-white text-gray-700 hover:bg-orange-50 hover:text-orange-600 shadow"
-              }`}
-            >
-              <span className="text-base">{category.icon}</span>
-              {category.label}
-            </button>
-          ))}
-        </div>
 
-        {/* Sort Options */}
-        <div className="flex flex-wrap items-center gap-4 mb-6">
-          <div className="flex items-center gap-2 text-gray-700">
-            <FaFilter className="text-orange-500" />
-            <span className="font-medium">Sort by:</span>
+        {/* Controls Bar */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+
+          {/* Category Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
+            {menuCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap border ${activeCategory === category.id
+                  ? "bg-[#8B4513] text-white border-[#8B4513] shadow-md transform scale-105"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#8B4513] hover:text-[#8B4513]"
+                  }`}
+              >
+                <span className="text-lg">{category.icon}</span>
+                {category.label}
+              </button>
+            ))}
           </div>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-          >
-            <option value="popular">Most Popular</option>
-            <option value="rating">Highest Rated</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-          </select>
+
+          {/* Sort Dropdown */}
+          <div className="flex items-center gap-3 self-end lg:self-auto">
+            <FaFilter className="text-[#8B4513]" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="pl-2 pr-8 py-2 bg-transparent border-none font-semibold text-gray-700 cursor-pointer focus:ring-0 hover:text-[#8B4513] transition-colors text-right"
+            >
+              <option value="popular">Popularity</option>
+              <option value="rating">Top Rated</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+            </select>
+          </div>
         </div>
 
         {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
           {sortedItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+              className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col"
             >
-              {/* Item Image/Badge Area */}
-              <div className="relative h-32 bg-gradient-to-br from-orange-100 to-amber-100 flex items-center justify-center">
-                <span className="text-4xl">{item.image}</span>
-                
+              {/* Image Area */}
+              <div className="relative h-48 bg-[#F5F5F5] rounded-t-2xl overflow-hidden flex items-center justify-center p-6">
+                <div className="absolute inset-0 bg-[#8B4513]/5 group-hover:bg-[#8B4513]/10 transition-colors"></div>
+                <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500 drop-shadow-sm filter">
+                  {item.image}
+                </span>
+
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex gap-2">
+                <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
                   {item.popular && (
-                    <span className="bg-orange-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                      <FaFire className="text-xs" />
+                    <span className="bg-[#DEB887] text-[#5D4037] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
                       Popular
                     </span>
                   )}
                   {item.featured && (
-                    <span className="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                    <span className="bg-[#8B4513] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
                       Featured
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Item Content */}
-              <div className="p-4">
+              {/* Content */}
+              <div className="p-5 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-bold text-gray-900 text-lg">{item.name}</h3>
-                  <span className="font-bold text-orange-600 text-lg">
+                  <h3 className="font-serif font-bold text-gray-900 text-lg leading-tight group-hover:text-[#8B4513] transition-colors">{item.name}</h3>
+                  <span className="font-bold text-[#8B4513] text-lg bg-[#FAF9F6] px-2 py-0.5 rounded-md">
                     ${item.price.toFixed(2)}
                   </span>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
                   {item.description}
                 </p>
 
-                <div className="flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                   <StarRating rating={item.rating} />
 
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className={`w-10 h-10 rounded-full flex flex-col items-center justify-center text-white text-xs transition-all ${
-                      addedItems[item.id]
-                        ? "bg-green-500"
-                        : "bg-orange-500 hover:bg-orange-600"
-                    }`}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${addedItems[item.id]
+                      ? "bg-green-500 text-white transform scale-110"
+                      : "bg-white text-gray-900 border border-gray-200 hover:bg-[#8B4513] hover:text-white hover:border-[#8B4513]"
+                      }`}
                   >
                     {addedItems[item.id] ? (
                       <FaCheck size={14} />
                     ) : (
-                      <>
-                        <FaPlus size={12} />
-                        {cartMap[item.id]?.quantity > 0 && (
-                          <span className="text-[10px]">
-                            x{cartMap[item.id].quantity}
-                          </span>
-                        )}
-                      </>
+                      <FaPlus size={12} />
                     )}
                   </button>
                 </div>
@@ -429,36 +429,30 @@ const MenuPage = () => {
 
         {/* Empty State */}
         {sortedItems.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">☕</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4 opacity-20 filter grayscale">☕</div>
+            <h3 className="text-xl font-bold text-gray-400 mb-2 font-serif">
               No items found
             </h3>
-            <p className="text-gray-600">
-              Try adjusting your search or filter criteria
+            <p className="text-gray-400">
+              We couldn't find any items matching your search.
             </p>
           </div>
         )}
       </div>
 
       {/* Floating Cart Button */}
-      <div className="fixed bottom-6 right-6">
+      <div className="fixed bottom-8 right-8 z-40">
         <button
-          className={`${
-            cartCount > 0 ? "bg-orange-600 hover:bg-orange-700" : "bg-gray-400"
-          } text-white px-6 py-3 rounded-full shadow-lg font-semibold flex items-center gap-3 transition-all transform hover:scale-105`}
+          className={`${cartCount > 0 ? "bg-[#8B4513] hover:bg-[#A0522D] shadow-2xl scale-100" : "bg-gray-400 scale-95 opacity-80"
+            } text-white pl-6 pr-2 py-2 rounded-full font-bold flex items-center gap-3 transition-all transform hover:-translate-y-1`}
           disabled={cartCount === 0}
           onClick={() => cartCount > 0 && navigate("/cart")}
         >
-          <span>{cartCount > 0 ? "View Cart" : "Cart Empty"}</span>
-          <span className="bg-white text-orange-600 rounded-full min-w-8 h-8 flex items-center justify-center text-sm font-bold px-2">
+          <span className="text-sm uppercase tracking-wider">Cart</span>
+          <span className="bg-white text-[#8B4513] rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-inner">
             {cartCount}
           </span>
-          {cartCount > 0 && (
-            <span className="text-sm font-normal">
-              (${cartTotal.toFixed(2)})
-            </span>
-          )}
         </button>
       </div>
     </div>

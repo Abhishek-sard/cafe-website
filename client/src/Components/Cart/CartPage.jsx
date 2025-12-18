@@ -135,9 +135,9 @@ const CartPage = () => {
               Clear Cart
             </button>
 
-            <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-full font-semibold transition">
+            <Link to="/checkout" className="block w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-full font-semibold transition text-center">
               Proceed to Checkout
-            </button>
+            </Link>
             <p className="text-xs text-gray-400 text-center">
               * Secure checkout supports cards, wallets and PayPal.
             </p>

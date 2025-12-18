@@ -1,7 +1,26 @@
-import React from "react";
-import {  FaLocationDot, FaPhone, FaEnvelope, } from "react-icons/fa6";
+import React, { useState } from "react";
+import { FaLocationDot, FaPhone, FaEnvelope, } from "react-icons/fa6";
+import axios from "../utils/axiosInstance";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.post("/queries", formData);
+      alert("Message sent successfully!");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      alert("Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-[#F5F5DC] text-[#5D4037]">
 
@@ -44,7 +63,7 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="text-2xl text-[#8B4513] font-bold">Phone</h3>
-                <p className="mt-1 text-lg">+977-9800000000</p>
+                <p className="mt-1 text-lg">+1 251 280 5086</p>
               </div>
             </div>
 
@@ -55,7 +74,7 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="text-2xl text-[#8B4513] font-bold">Email</h3>
-                <p className="mt-1 text-lg">contact@elitecafe.com</p>
+                <p className="mt-1 text-lg">elitecafe23@gmail.com</p>
               </div>
             </div>
 
@@ -73,24 +92,56 @@ const Contact = () => {
           </div>
 
           {/* CONTACT FORM */}
-          <form className="bg-white rounded-lg shadow-xl p-8 space-y-4">
+          <form className="bg-white rounded-lg shadow-xl p-8 space-y-4" onSubmit={handleSubmit}>
 
             <h3 className="text-3xl font-bold text-[#8B4513] mb-4">Send a Message</h3>
 
-            <input type="text" placeholder="Your Name"
-              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none" />
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              type="text"
+              placeholder="Your Name"
+              required
+              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none"
+            />
 
-            <input type="email" placeholder="Your Email"
-              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none" />
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              type="email"
+              placeholder="Your Email"
+              required
+              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none"
+            />
 
-            <input type="text" placeholder="Subject"
-              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none" />
+            <input
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              type="text"
+              placeholder="Subject"
+              required
+              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none"
+            />
 
-            <textarea placeholder="Your Message" rows="5"
-              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none"></textarea>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Your Message"
+              rows="5"
+              required
+              className="w-full border border-[#DEB887] rounded-md p-3 focus:border-[#8B4513] outline-none"
+            ></textarea>
 
-            <button className="bg-[#8B4513] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#A0522D] w-full">
-              Send Message
+            <button
+              type="submit"
+              disabled={loading}
+              className={`bg-[#8B4513] text-white px-6 py-3 rounded-md font-semibold hover:bg-[#A0522D] w-full transition ${loading ? 'opacity-70' : ''}`}
+            >
+              {loading ? "Sending..." : "Send Message"}
             </button>
 
           </form>

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowRight, FaCoffee, FaShoppingCart, FaSmile } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const statsData = [
-  { label: "Coffee Items", end: 50,  },
-  { label: "Orders Running", end: 1200, },
-  { label: "Happy Customers", end: 500,  },
+  { label: "Premium Blends", end: 50 },
+  { label: "Daily Orders", end: 1200 },
+  { label: "Happy Clients", end: 500 },
 ];
 
 const Hero = () => {
@@ -28,60 +29,63 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-[300px] md:h-[450px] overflow-hidden">
+    <section className="relative w-full h-[600px] md:h-[700px] overflow-hidden flex items-center justify-center text-center text-white">
       {/* Background Video */}
       <video
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        src="/1130.mp4"
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        src="https://joy1.videvo.net/videvo_files/video/free/2019-11/large_watermarked/190301_1_25_11_preview.mp4"
         autoPlay
         loop
         muted
+        playsInline
       />
 
-      {/* Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div>
+      {/* Dark Overlay for Readability */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">
-          Discover the <span className="text-[#F4A460]">Art of Perfect Coffee</span>
+      <div className="relative z-20 px-4 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
+
+        <h1 className="text-4xl md:text-7xl font-bold font-serif leading-tight tracking-tight drop-shadow-lg">
+          Savor the <span className="text-[#DEB887]">Moment</span>
         </h1>
-        <p className="text-white/80 max-w-xl text-sm md:text-lg mb-6">
-          Experience the rich, bold flavors of our exquisite coffee blends—crafted to awaken your senses and make every sip unforgettable.
+
+        <p className="text-lg md:text-2xl font-light text-gray-200 max-w-2xl mx-auto drop-shadow-md">
+          Experience the rich, bold flavors of our handcrafted blends—brewed to perfection for the true coffee connoisseur.
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <a
-            href="#order"
-            className="bg-[#8B4513] hover:bg-[#D2691E] text-white font-semibold px-6 py-3 rounded-full flex items-center justify-center transition"
+        <div className="flex flex-col sm:flex-row gap-5 justify-center mt-8">
+          <Link
+            to="/menu"
+            className="bg-[#8B4513] hover:bg-[#A0522D] text-white text-lg font-semibold px-8 py-3 rounded-full flex items-center justify-center transition-all transform hover:scale-105 shadow-xl"
           >
             Order Now <FaArrowRight className="ml-2" />
-          </a>
-          <a
-            href="#menu"
-            className="border border-white hover:bg-white hover:text-[#8B4513] text-white font-semibold px-6 py-3 rounded-full flex items-center justify-center transition"
+          </Link>
+          <Link
+            to="/about"
+            className="border-2 border-white hover:bg-white hover:text-black text-white text-lg font-semibold px-8 py-3 rounded-full flex items-center justify-center transition-all transform hover:scale-105 shadow-xl"
           >
-            Explore Menu <FaArrowRight className="ml-2" />
-          </a>
+            Our Story
+          </Link>
         </div>
-      </div>
 
-      {/* Counter Section at Left-Bottom */}
-      <div className="absolute bottom-4 left-4 flex flex-col md:flex-row gap-6 bg-black/10 p-4 rounded-lg">
-        {statsData.map((stat, idx) => (
-          <div key={idx} className="text-center text-white">
-           
-            <h3 className="text-xl md:text-2xl font-bold">
-              {counts[idx]}
-              {stat.label === "Orders Running" ? "+" : ""}
-            </h3>
-            <p className="text-sm md:text-lg text-[#fdfdfd]">{stat.label}</p>
-          </div>
-        ))}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 pt-10 border-t border-white/20">
+          {statsData.map((stat, idx) => (
+            <div key={idx} className="flex flex-col items-center">
+              <span className="text-3xl md:text-5xl font-bold text-[#DEB887] font-mono">
+                {counts[idx]}+
+              </span>
+              <span className="text-sm md:text-base uppercase tracking-widest text-gray-300 mt-2">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );
 };
-
 export default Hero;
