@@ -23,7 +23,13 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { cartCount } = useCart();
-  const location = useLocation(); // Forces re-render on route change
+  const location = useLocation();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setDropdownOpen(false);
+  }, [location]);
   const navigate = useNavigate();
 
   const isLoggedIn = !!localStorage.getItem("accesstoken");
@@ -62,7 +68,7 @@ const Navbar = () => {
       </div>
 
       {/* ---------- MAIN NAVBAR ---------- */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
+      <nav className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 transition-all duration-300">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4 py-4">
 
           {/* Logo */}

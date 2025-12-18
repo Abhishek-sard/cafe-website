@@ -19,4 +19,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api", dataRoutes);
 
+
+app.get("/api/config/paypal", (req, res) => {
+  res.send({
+    clientId: process.env.PAYPAL_CLIENT_ID,
+  });
+});
+
 app.listen(5000, () => console.log("Server running on port 5000"));

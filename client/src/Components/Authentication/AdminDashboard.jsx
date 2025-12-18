@@ -185,61 +185,67 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Table */}
-                    <div className="bg-white shadow-sm rounded-b-xl overflow-hidden">
-                        <table className="min-w-full">
-                            <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                                <tr>
-                                    <th className="py-3 px-6 text-left">Order ID</th>
-                                    <th className="py-3 px-6 text-left">Customer</th>
-                                    <th className="py-3 px-6 text-left">Items</th>
-                                    <th className="py-3 px-6 text-left">Total</th>
-                                    <th className="py-3 px-6 text-left">Status</th>
-                                    <th className="py-3 px-6 text-left">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-gray-600 text-sm font-light">
-                                {filteredOrders.map((order) => (
-                                    <tr key={order._id} className="border-b border-gray-200 hover:bg-gray-50">
-                                        <td className="py-3 px-6 text-left whitespace-nowrap font-mono">
-                                            {order._id.slice(-6).toUpperCase()}
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            <div className="font-medium">{order.user?.name}</div>
-                                            <div className="text-xs text-gray-500">{order.user?.email}</div>
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            {order.items.length} items
-                                        </td>
-                                        <td className="py-3 px-6 text-left font-bold">
-                                            ${order.totalAmount.toFixed(2)}
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            <span className={`py-1 px-3 rounded-full text-xs font-bold
-                                                ${order.status === 'Delivered' ? 'bg-green-200 text-green-700' :
-                                                    order.status === 'Pending' ? 'bg-yellow-200 text-yellow-700' :
-                                                        'bg-blue-200 text-blue-700'}`}>
-                                                {order.status}
-                                            </span>
-                                        </td>
-                                        <td className="py-3 px-6 text-left">
-                                            <select
-                                                className="border rounded px-2 py-1 text-xs focus:outline-none focus:border-orange-500 bg-white"
-                                                value={order.status}
-                                                onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                                            >
-                                                <option value="Pending">Pending</option>
-                                                <option value="Processing">Processing</option>
-                                                <option value="Shipped">Shipped</option>
-                                                <option value="Delivered">Delivered</option>
-                                            </select>
-                                        </td>
+                    {/* Table Container */}
+                    <div className="bg-white shadow-sm rounded-b-xl overflow-hidden border border-t-0 border-gray-100">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full">
+                                <thead className="bg-[#FAF9F6] text-gray-600 uppercase text-xs leading-normal tracking-wider border-b border-gray-200">
+                                    <tr>
+                                        <th className="py-4 px-6 text-left font-bold">Order ID</th>
+                                        <th className="py-4 px-6 text-left font-bold">Customer</th>
+                                        <th className="py-4 px-6 text-left font-bold">Items</th>
+                                        <th className="py-4 px-6 text-left font-bold">Total</th>
+                                        <th className="py-4 px-6 text-left font-bold">Status</th>
+                                        <th className="py-4 px-6 text-left font-bold">Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="text-gray-600 text-sm font-light">
+                                    {filteredOrders.map((order) => (
+                                        <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                            <td className="py-4 px-6 text-left whitespace-nowrap font-mono text-xs font-bold text-[#8B4513]">
+                                                {order._id.slice(-6).toUpperCase()}
+                                            </td>
+                                            <td className="py-4 px-6 text-left">
+                                                <div className="font-bold text-gray-800">{order.user?.name}</div>
+                                                <div className="text-xs text-gray-400">{order.user?.email}</div>
+                                            </td>
+                                            <td className="py-4 px-6 text-left">
+                                                <span className="bg-gray-100 px-2 py-1 rounded text-xs font-medium">
+                                                    {order.items.length} items
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-6 text-left font-bold text-gray-800">
+                                                ${order.totalAmount.toFixed(2)}
+                                            </td>
+                                            <td className="py-4 px-6 text-left">
+                                                <span className={`py-1.5 px-3 rounded-full text-[10px] font-bold uppercase tracking-wider
+                                                    ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                                                        order.status === 'Pending' ? 'bg-orange-100 text-orange-700' :
+                                                            'bg-blue-100 text-blue-700'}`}>
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-6 text-left">
+                                                <select
+                                                    className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-[#8B4513] focus:ring-1 focus:ring-[#8B4513] bg-white cursor-pointer"
+                                                    value={order.status}
+                                                    onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
+                                                >
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Processing">Processing</option>
+                                                    <option value="Shipped">Shipped</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                         {filteredOrders.length === 0 && (
-                            <div className="p-8 text-center text-gray-500">No orders found matching criteria.</div>
+                            <div className="p-12 text-center">
+                                <p className="text-gray-400 text-lg">No orders found matching criteria.</p>
+                            </div>
                         )}
                     </div>
                 </>
@@ -285,30 +291,32 @@ const AdminDashboard = () => {
 
             {/* QUERIES TAB */}
             {activeTab === "queries" && (
-                <div className="bg-white rounded shadow overflow-hidden">
-                    <table className="min-w-full">
-                        <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-                            <tr>
-                                <th className="py-3 px-6 text-left">Date</th>
-                                <th className="py-3 px-6 text-left">Name</th>
-                                <th className="py-3 px-6 text-left">Email</th>
-                                <th className="py-3 px-6 text-left">Subject</th>
-                                <th className="py-3 px-6 text-left">Message</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-gray-600 text-sm font-light">
-                            {queries.map((q) => (
-                                <tr key={q._id} className="border-b border-gray-200 hover:bg-gray-50">
-                                    <td className="py-3 px-6 text-left whitespace-nowrap">{new Date(q.createdAt).toLocaleDateString()}</td>
-                                    <td className="py-3 px-6 text-left font-medium">{q.name}</td>
-                                    <td className="py-3 px-6 text-left text-blue-600">{q.email}</td>
-                                    <td className="py-3 px-6 text-left font-bold">{q.subject}</td>
-                                    <td className="py-3 px-6 text-left">{q.message}</td>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full">
+                            <thead className="bg-[#FAF9F6] text-gray-600 uppercase text-xs leading-normal tracking-wider border-b border-gray-200">
+                                <tr>
+                                    <th className="py-4 px-6 text-left font-bold">Date</th>
+                                    <th className="py-4 px-6 text-left font-bold">Name</th>
+                                    <th className="py-4 px-6 text-left font-bold">Email</th>
+                                    <th className="py-4 px-6 text-left font-bold">Subject</th>
+                                    <th className="py-4 px-6 text-left font-bold">Message</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    {queries.length === 0 && <div className="p-8 text-center text-gray-500">No new messages.</div>}
+                            </thead>
+                            <tbody className="text-gray-600 text-sm font-light">
+                                {queries.map((q) => (
+                                    <tr key={q._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                        <td className="py-4 px-6 text-left whitespace-nowrap text-xs text-gray-400">{new Date(q.createdAt).toLocaleDateString()}</td>
+                                        <td className="py-4 px-6 text-left font-medium text-gray-800">{q.name}</td>
+                                        <td className="py-4 px-6 text-left text-[#8B4513] underline text-xs">{q.email}</td>
+                                        <td className="py-4 px-6 text-left font-bold text-gray-800">{q.subject}</td>
+                                        <td className="py-4 px-6 text-left max-w-xs truncate">{q.message}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {queries.length === 0 && <div className="p-12 text-center text-gray-400">No new messages from customers.</div>}
                 </div>
             )}
         </div>

@@ -5,15 +5,15 @@ const testimonialsData = [
   {
     id: 1,
     name: "Sarah Johnson",
-    role: "Regular Customer",
+    role: "Verified Customer",
     rating: 5,
-    text: "The caramel latte from Elite Cafe is the best I've ever had. The online ordering system is so convenient!",
+    text: "The caramel latte from Elite Cafe is the best I've ever had. Truly exceptional quality and service.",
     image: "👩‍💼",
   },
   {
     id: 2,
     name: "Michael Chen",
-    role: "Office Manager",
+    role: "Regular",
     rating: 5,
     text: "I order coffee for our entire team every morning. The quality is consistently excellent!",
     image: "👨‍💼",
@@ -21,22 +21,21 @@ const testimonialsData = [
   {
     id: 3,
     name: "Emily Rodriguez",
-    rating: 4,
-    role: "Coffee Blogger",
-    text: "As a coffee enthusiast, I appreciate the quality of their beans. The Ethiopian Pour Over is exceptional.",
+    rating: 5,
+    role: "Food Enthusiast",
+    text: "As a coffee enthusiast, I appreciate the quality of their beans. The Pour Over is exceptional.",
     image: "👩‍🎓",
   },
 ];
 
 const StarRating = ({ rating }) => (
-  <div className="flex items-center gap-1 mb-1">
+  <div className="flex items-center gap-1 mb-2">
     {[...Array(5)].map((_, index) => (
       <FaStar
         key={index}
-        className={`text-sm ${index < rating ? "text-yellow-400" : "text-gray-300"}`}
+        className={`text-sm ${index < rating ? "text-[#DEB887]" : "text-gray-200"}`}
       />
     ))}
-    <span className="text-xs text-gray-500 ml-2">({rating}.0)</span>
   </div>
 );
 
@@ -53,51 +52,45 @@ const Testimonials = () => {
   const testimonial = testimonialsData[current];
 
   return (
-    <section className="py-12 bg-gradient-to-r from-gray-100 via-orange-50 to-gray-100">
-      <div className="max-w-3xl mx-auto px-4 text-center">
-        <span className="text-orange-600 font-semibold tracking-widest uppercase text-sm">
-          Customer Stories
+    <section className="py-20 bg-white">
+      <div className="max-w-4xl mx-auto px-4 text-center">
+
+        <span className="text-[#8B4513] font-bold tracking-widest uppercase text-sm border-b-2 border-[#DEB887] pb-1">
+          Testimonials
         </span>
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mt-0 mb-2">
-          What Our Customers Say
+        <h2 className="text-3xl md:text-5xl font-serif font-bold text-gray-900 mt-4 mb-4">
+          What They Say
         </h2>
-        <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base mb-6">
-          Our customers love us! Read their stories and see why Elite Cafe is the daily choice for coffee lovers.
+        <p className="text-gray-500 text-lg mb-12">
+          Join thousands of satisfied customers who start their day with us.
         </p>
 
         <div className="relative">
-          <div className="bg-white rounded-2xl shadow-lg p-5 md:p-7 transition-all duration-500 transform animate-fadeIn relative overflow-hidden">
-            {/* Quote Icon */}
-            <FaQuoteLeft className="absolute top-3 right-3 text-orange-200 text-3xl" />
+          <div className="bg-[#FAF9F6] rounded-3xl p-10 md:p-14 shadow-xl transition-all duration-500 transform relative overflow-hidden flex flex-col items-center">
 
-            {/* Rating */}
-            <StarRating rating={testimonial.rating} />
+            <FaQuoteLeft className="text-4xl text-[#DEB887] mb-6 opacity-50" />
 
-            {/* Testimonial Text */}
-            <p className="text-gray-700 text-sm md:text-base leading-relaxed mb-4">
+            <p className="text-gray-800 text-lg md:text-2xl leading-relaxed mb-8 italic font-serif">
               "{testimonial.text}"
             </p>
 
-            {/* Customer Info */}
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center text-xl md:text-2xl">
-                {testimonial.image}
-              </div>
-              <div className="text-left">
-                <h4 className="font-semibold text-gray-900 text-base md:text-lg">
-                  {testimonial.name}
-                </h4>
-                <p className="text-gray-500 text-xs md:text-sm">{testimonial.role}</p>
-              </div>
+            <StarRating rating={testimonial.rating} />
+
+            <div className="mt-4 text-center">
+              <h4 className="font-bold text-gray-900 text-xl">
+                {testimonial.name}
+              </h4>
+              <p className="text-[#8B4513] text-sm uppercase tracking-wide mt-1">{testimonial.role}</p>
             </div>
+
           </div>
 
-          {/* Dots */}
-          <div className="flex justify-center mt-3 gap-2">
+          <div className="flex justify-center mt-8 gap-3">
             {testimonialsData.map((_, index) => (
-              <span
+              <button
                 key={index}
-                className={`w-2 h-2 rounded-full transition-all ${index === current ? "bg-orange-600" : "bg-gray-300"
+                onClick={() => setCurrent(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === current ? "bg-[#8B4513] w-6" : "bg-gray-300 hover:bg-[#DEB887]"
                   }`}
               />
             ))}
@@ -107,5 +100,4 @@ const Testimonials = () => {
     </section>
   );
 };
-
 export default Testimonials;
