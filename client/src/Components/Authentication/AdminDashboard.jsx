@@ -131,11 +131,8 @@ const AdminDashboard = () => {
             formData.append("description", newProduct.description || "");
             formData.append("image", imageFile);
 
-            await axios.post("/products", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            // Let the browser set the correct multipart Content-Type with boundary
+            await axios.post("/products", formData);
             
             alert("Product added!");
             setShowAddProduct(false);
