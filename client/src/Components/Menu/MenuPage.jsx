@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaSearch,
   FaFilter,
@@ -14,14 +14,17 @@ import {
 } from "react-icons/fa";
 import { useCart } from "../Cart/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
+import axios from "../utils/axiosInstance";
 
 const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("popular");
   const [addedItems, setAddedItems] = useState({});
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { cartCount, cartTotal, addToCart, items: cartMap } = useCart();
+  const { cartCount, addToCart } = useCart();
 
 
   const menuCategories = [
@@ -33,6 +36,33 @@ const MenuPage = () => {
     { id: "pastry", label: "Pastries", icon: <FaBreadSlice /> },
     { id: "special", label: "Specialty", icon: <FaStar /> },
   ];
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axios.get("/products");
+        // Transform database products to match menu item structure
+        const transformedProducts = data.map((product) => ({
+          id: product._id,
+          name: product.name,
+          category: product.category.toLowerCase(),
+          description: product.description || "",
+          price: product.price,
+          image: product.image || "☕", // Use image URL or default emoji
+          popular: false,
+          featured: false,
+          rating: 4.5, // Default rating for database products
+        }));
+        setProducts(transformedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleAddToCart = (item) => {
     addToCart({
@@ -261,7 +291,10 @@ const MenuPage = () => {
     },
   ];
 
-  const filteredItems = menuItems.filter(item => {
+  // Combine hardcoded menu items with database products
+  const allMenuItems = [...menuItems, ...products];
+
+  const filteredItems = allMenuItems.filter(item => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -363,9 +396,18 @@ const MenuPage = () => {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-20">
+            <div className="animate-spin h-12 w-12 border-4 border-[#8B4513] rounded-full border-t-transparent mx-auto"></div>
+            <p className="mt-4 text-gray-500">Loading menu items...</p>
+          </div>
+        )}
+
         {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-          {sortedItems.map((item) => (
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+            {sortedItems.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col"
@@ -373,9 +415,17 @@ const MenuPage = () => {
               {/* Image Area */}
               <div className="relative h-48 bg-[#F5F5F5] rounded-t-2xl overflow-hidden flex items-center justify-center p-6">
                 <div className="absolute inset-0 bg-[#8B4513]/5 group-hover:bg-[#8B4513]/10 transition-colors"></div>
-                <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500 drop-shadow-sm filter">
-                  {item.image}
-                </span>
+                {item.image && (item.image.startsWith('http') || item.image.startsWith('/uploads')) ? (
+                  <img 
+                    src={item.image.startsWith('/uploads') ? `http://localhost:5000${item.image}` : item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500 drop-shadow-sm filter">
+                    {item.image || "☕"}
+                  </span>
+                )}
 
                 {/* Badges */}
                 <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
@@ -425,10 +475,11 @@ const MenuPage = () => {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* Empty State */}
-        {sortedItems.length === 0 && (
+        {!loading && sortedItems.length === 0 && (
           <div className="text-center py-20">
             <div className="text-6xl mb-4 opacity-20 filter grayscale">☕</div>
             <h3 className="text-xl font-bold text-gray-400 mb-2 font-serif">

@@ -14,7 +14,9 @@ const AdminDashboard = () => {
 
     // Products State
     const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ name: "", category: "", price: "", description: "", image: "" });
+    const [newProduct, setNewProduct] = useState({ name: "", category: "", price: "", description: "" });
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [showAddProduct, setShowAddProduct] = useState(false);
 
     // Queries State
@@ -88,19 +90,72 @@ const AdminDashboard = () => {
             fetchOrders();
             alert("Order updated successfully");
         } catch (error) {
+            console.error("Error updating order:", error);
             alert("Failed to update order");
+        }
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
     const handleAddProduct = async () => {
         try {
-            await axios.post("/products", newProduct);
+            // Validate required fields
+            if (!newProduct.name || !newProduct.category || !newProduct.price || !imageFile) {
+                alert("Please fill in all required fields including image");
+                return;
+            }
+
+            // Validate price is a valid number
+            const price = parseFloat(newProduct.price);
+            if (isNaN(price) || price <= 0) {
+                alert("Please enter a valid price");
+                return;
+            }
+
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append("name", newProduct.name);
+            formData.append("category", newProduct.category);
+            formData.append("price", price.toString());
+            formData.append("description", newProduct.description || "");
+            formData.append("image", imageFile);
+
+            // Let the browser set the correct multipart Content-Type with boundary
+            await axios.post("/products", formData);
+            
             alert("Product added!");
             setShowAddProduct(false);
-            setNewProduct({ name: "", category: "", price: "", description: "", image: "" });
+            setNewProduct({ name: "", category: "", price: "", description: "" });
+            setImageFile(null);
+            setImagePreview(null);
             fetchProducts();
         } catch (error) {
-            alert("Failed to add product");
+            console.error("Error adding product:", error);
+            const errorMessage = error.response?.data?.message || error.message || "Failed to add product";
+            const errorDetails = error.response?.data?.details || "";
+            const fullMessage = errorDetails ? `${errorMessage}\n${errorDetails}` : errorMessage;
+            alert(`Failed to add product: ${fullMessage}`);
+            
+            // If access denied, suggest re-login
+            if (error.response?.status === 403) {
+                const shouldRelogin = confirm("Access Denied. Your session may have expired or your role may have changed. Would you like to log out and log back in?");
+                if (shouldRelogin) {
+                    localStorage.removeItem("accesstoken");
+                    localStorage.removeItem("role");
+                    window.location.href = "/login";
+                }
+            }
         }
     };
 
@@ -109,8 +164,23 @@ const AdminDashboard = () => {
         try {
             await axios.delete(`/products/${id}`);
             fetchProducts();
+            alert("Product deleted successfully");
         } catch (error) {
-            alert("Failed to delete product");
+            console.error("Error deleting product:", error);
+            const errorMessage = error.response?.data?.message || error.message || "Failed to delete product";
+            const errorDetails = error.response?.data?.details || "";
+            const fullMessage = errorDetails ? `${errorMessage}\n${errorDetails}` : errorMessage;
+            alert(`Failed to delete product: ${fullMessage}`);
+            
+            // If access denied, suggest re-login
+            if (error.response?.status === 403) {
+                const shouldRelogin = confirm("Access Denied. Your session may have expired or your role may have changed. Would you like to log out and log back in?");
+                if (shouldRelogin) {
+                    localStorage.removeItem("accesstoken");
+                    localStorage.removeItem("role");
+                    window.location.href = "/login";
+                }
+            }
         }
     };
 
@@ -262,11 +332,51 @@ const AdminDashboard = () => {
                         <div className="bg-white p-6 rounded shadow-md border animate-fade-in">
                             <h3 className="font-bold mb-4">Add New Product</h3>
                             <div className="grid grid-cols-2 gap-4">
-                                <input placeholder="Product Name" className="border p-2 rounded" value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} />
-                                <input placeholder="Category" className="border p-2 rounded" value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })} />
-                                <input placeholder="Price" type="number" className="border p-2 rounded" value={newProduct.price} onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} />
-                                <input placeholder="Image URL" className="border p-2 rounded" value={newProduct.image} onChange={e => setNewProduct({ ...newProduct, image: e.target.value })} />
-                                <textarea placeholder="Description" className="border p-2 rounded col-span-2" value={newProduct.description} onChange={e => setNewProduct({ ...newProduct, description: e.target.value })} />
+                                <input 
+                                    placeholder="Product Name" 
+                                    className="border p-2 rounded" 
+                                    value={newProduct.name} 
+                                    onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} 
+                                />
+                                <input 
+                                    placeholder="Category" 
+                                    className="border p-2 rounded" 
+                                    value={newProduct.category} 
+                                    onChange={e => setNewProduct({ ...newProduct, category: e.target.value })} 
+                                />
+                                <input 
+                                    placeholder="Price" 
+                                    type="number" 
+                                    step="0.01"
+                                    className="border p-2 rounded" 
+                                    value={newProduct.price} 
+                                    onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} 
+                                />
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                                    <input 
+                                        type="file" 
+                                        accept="image/*"
+                                        className="border p-2 rounded w-full"
+                                        onChange={handleImageChange}
+                                    />
+                                    {imagePreview && (
+                                        <div className="mt-4">
+                                            <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                                            <img 
+                                                src={imagePreview} 
+                                                alt="Preview" 
+                                                className="w-32 h-32 object-cover rounded border"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <textarea 
+                                    placeholder="Description" 
+                                    className="border p-2 rounded col-span-2" 
+                                    value={newProduct.description} 
+                                    onChange={e => setNewProduct({ ...newProduct, description: e.target.value })} 
+                                />
                             </div>
                             <button onClick={handleAddProduct} className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Product</button>
                         </div>
@@ -275,7 +385,19 @@ const AdminDashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {products.map(product => (
                             <div key={product._id} className="bg-white p-4 rounded shadow flex flex-col relative">
-                                <img src={product.image} alt={product.name} className="h-40 w-full object-cover rounded mb-4" />
+                                {product.image && (product.image.startsWith('http') || product.image.startsWith('/uploads')) ? (
+                                    <img 
+                                        src={product.image.startsWith('/uploads') 
+                                            ? `http://localhost:5000${product.image}` 
+                                            : product.image} 
+                                        alt={product.name} 
+                                        className="h-40 w-full object-cover rounded mb-4" 
+                                    />
+                                ) : (
+                                    <div className="h-40 w-full flex items-center justify-center text-6xl bg-gray-100 rounded mb-4">
+                                        {product.image || "☕"}
+                                    </div>
+                                )}
                                 <h3 className="font-bold text-lg">{product.name}</h3>
                                 <p className="text-gray-500 text-sm mb-2">{product.category}</p>
                                 <p className="text-gray-700 flex-grow">{product.description}</p>

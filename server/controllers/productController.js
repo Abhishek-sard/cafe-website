@@ -11,7 +11,21 @@ export const getProducts = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     try {
-        const product = new Product(req.body);
+        const { name, category, price, description } = req.body;
+        
+        // Get image path from uploaded file
+        const imagePath = req.file 
+            ? `/uploads/products/${req.file.filename}` 
+            : req.body.image; // Fallback to URL if no file uploaded
+
+        const product = new Product({
+            name,
+            category,
+            price: parseFloat(price),
+            description,
+            image: imagePath,
+        });
+        
         await product.save();
         res.status(201).json(product);
     } catch (error) {
