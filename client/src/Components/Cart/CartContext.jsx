@@ -7,12 +7,36 @@ import React, {
 } from "react";
 
 const CartContext = createContext(null);
-const STORAGE_KEY = "eliteCafeCart";
+
+// Get user-specific storage key
+const getStorageKey = (userId) => {
+  return userId ? `eliteCafeCart_${userId}` : "eliteCafeCart_guest";
+};
 
 export const CartProvider = ({ children }) => {
+  // Get current user ID from localStorage or token
+  const getUserId = () => {
+    // First try to get from localStorage (set during login)
+    const userId = localStorage.getItem("userId");
+    if (userId) return userId;
+    
+    // Fallback: decode JWT token to get user ID
+    try {
+      const token = localStorage.getItem("accesstoken");
+      if (!token) return null;
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.id || null;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const [currentUserId, setCurrentUserId] = useState(getUserId());
   const [items, setItems] = useState(() => {
     try {
-      const cached = localStorage.getItem(STORAGE_KEY);
+      const userId = getUserId();
+      const storageKey = getStorageKey(userId);
+      const cached = localStorage.getItem(storageKey);
       return cached ? JSON.parse(cached) : {};
     } catch (err) {
       console.warn("Failed to parse cart cache", err);
@@ -20,8 +44,34 @@ export const CartProvider = ({ children }) => {
     }
   });
 
+  // Watch for user changes (login/logout)
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    const checkUserChange = () => {
+      const newUserId = getUserId();
+      if (newUserId !== currentUserId) {
+        // User changed - clear old cart and load new user's cart
+        setCurrentUserId(newUserId);
+        const newStorageKey = getStorageKey(newUserId);
+        try {
+          const cached = localStorage.getItem(newStorageKey);
+          setItems(cached ? JSON.parse(cached) : {});
+        } catch (err) {
+          setItems({});
+        }
+      }
+    };
+
+    // Check on mount and periodically
+    checkUserChange();
+    const interval = setInterval(checkUserChange, 1000);
+    return () => clearInterval(interval);
+  }, [currentUserId]);
+
+  // Save cart to user-specific storage
+  useEffect(() => {
+    const userId = getUserId();
+    const storageKey = getStorageKey(userId);
+    localStorage.setItem(storageKey, JSON.stringify(items));
   }, [items]);
 
   const addToCart = (product, quantity = 1) => {

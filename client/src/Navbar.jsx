@@ -36,8 +36,15 @@ const Navbar = () => {
   const userRole = localStorage.getItem("role");
 
   const handleLogout = () => {
+    // Clear user-specific cart
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      const userCartKey = `eliteCafeCart_${userId}`;
+      localStorage.removeItem(userCartKey);
+    }
     localStorage.removeItem("accesstoken");
     localStorage.removeItem("role");
+    localStorage.removeItem("userId");
     navigate("/login");
   };
 

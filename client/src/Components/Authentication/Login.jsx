@@ -16,6 +16,14 @@ const Login = () => {
             const res = await axios.post("/auth/login", data);
             localStorage.setItem("accesstoken", res.data.accessToken);
             localStorage.setItem("role", res.data.user.role);
+            // Store user ID - try _id first (MongoDB), then id
+            const userId = res.data.user._id || res.data.user.id;
+            if (userId) {
+                localStorage.setItem("userId", userId);
+            }
+            // Clear guest cart on login - user will get their own cart
+            const guestCartKey = "eliteCafeCart_guest";
+            localStorage.removeItem(guestCartKey);
             navigate(res.data.user.role === "admin" ? "/admin" : "/user/dashboard");
         } catch (error) {
             alert(error.response?.data?.message || "Login failed");
