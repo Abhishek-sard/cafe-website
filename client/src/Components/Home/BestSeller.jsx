@@ -1,75 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaMugHot, FaPlus, FaCheck, FaCoffee } from "react-icons/fa";
 import { useCart } from "../Cart/CartContext.jsx";
-
-const productsData = [
-    {
-        id: 1,
-        category: "black",
-        title: "Classic Americano",
-        description: "Rich espresso shots topped with hot water for a bold, smooth flavor",
-        price: 3.5,
-        badge: "Bestseller",
-        icon: <FaMugHot size={30} className="text-white" />,
-    },
-    {
-        id: 2,
-        category: "black",
-        title: "Ethiopian Pour Over",
-        description: "Single-origin beans with floral notes and bright acidity",
-        price: 4.75,
-    },
-    {
-        id: 3,
-        category: "simple",
-        title: "House Blend Drip",
-        description: "Our signature medium-roast blend with balanced flavor",
-        price: 2.95,
-        badge: "Bestseller",
-    },
-    {
-        id: 5,
-        category: "milk",
-        title: "Caramel Macchiato",
-        description: "Espresso with vanilla syrup, steamed milk and caramel drizzle",
-        price: 5.25,
-        badge: "Bestseller",
-    },
-    {
-        id: 6,
-        category: "milk",
-        title: "Hazelnut Latte",
-        description: "Smooth espresso with steamed milk and hazelnut syrup",
-        price: 4.95,
-        badge: "New",
-    },
-    {
-        id: 8,
-        category: "milk",
-        title: "Mocha Delight",
-        description: "Rich chocolate and espresso blend with steamed milk",
-        price: 5.5,
-    },
-];
+import axios from "../utils/axiosInstance";
 
 const BestSellers = () => {
     const [activeCategory, setActiveCategory] = useState("all");
     const [cartAdded, setCartAdded] = useState({});
-    const { addToCart, items: cartItems } = useCart();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { addToCart } = useCart();
 
+    // Fetch products from API
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const { data } = await axios.get("/products");
+                // Transform database products to match component structure
+                const transformedProducts = data.map((product) => ({
+                    id: product._id,
+                    category: product.category?.toLowerCase() || "all",
+                    title: product.name,
+                    description: product.description || "",
+                    price: product.price,
+                    image: product.image || "",
+                    badge: null, // No badges for now, can be added by admin later
+                }));
+                setProducts(transformedProducts);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchProducts();
+    }, []);
+
+    // Dynamic categories based on products
     const categories = [
-        { id: "all", label: "All Coffees" },
-        { id: "black", label: "Black Coffee" },
-        { id: "simple", label: "Simple Coffee" },
-        { id: "milk", label: "Milk Coffee" },
+        { id: "all", label: "All Products" },
+        ...Array.from(new Set(products.map(p => p.category)))
+            .filter(cat => cat && cat !== "all")
+            .map(cat => ({
+                id: cat,
+                label: cat.charAt(0).toUpperCase() + cat.slice(1)
+            }))
     ];
 
     const handleAddToCart = (product) => {
         addToCart({
-            id: `best-${product.id}`,
+            id: product.id,
             name: product.title,
             price: product.price,
             description: product.description,
+            image: product.image,
         });
         setCartAdded((prev) => ({ ...prev, [product.id]: true }));
         setTimeout(() => {
@@ -79,8 +62,8 @@ const BestSellers = () => {
 
     const filteredProducts =
         activeCategory === "all"
-            ? productsData
-            : productsData.filter((p) => p.category === activeCategory);
+            ? products
+            : products.filter((p) => p.category === activeCategory);
 
     return (
         <section className="py-20 bg-[#FAF9F6]">
@@ -114,31 +97,47 @@ const BestSellers = () => {
                     ))}
                 </div>
 
-                {/* Products Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredProducts.map((product) => (
-                        <div
-                            key={product.id}
-                            className="group relative bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100"
-                        >
-                            {product.badge && (
-                                <span
-                                    className={`z-10 absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm ${product.badge === "Bestseller"
-                                        ? "bg-[#DEB887] text-[#5D4037]"
-                                        : "bg-[#8B4513] text-white"
-                                        }`}
-                                >
-                                    {product.badge}
-                                </span>
-                            )}
+                {/* Loading State */}
+                {loading && (
+                    <div className="text-center py-20">
+                        <div className="animate-spin h-12 w-12 border-4 border-[#8B4513] rounded-full border-t-transparent mx-auto"></div>
+                        <p className="mt-4 text-gray-500">Loading products...</p>
+                    </div>
+                )}
 
-                            {/* Product Image Area */}
-                            <div className="h-48 overflow-hidden relative bg-[#F5F5F5] flex items-center justify-center">
-                                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-300"></div>
-                                <div className={`transform group-hover:scale-110 transition-transform duration-500`}>
-                                    {product.icon || <FaCoffee size={48} className="text-[#8B4513] opacity-80" />}
-                                </div>
+                {/* Products Grid */}
+                {!loading && (
+                    <>
+                        {filteredProducts.length === 0 ? (
+                            <div className="text-center py-20">
+                                <FaCoffee className="text-6xl text-gray-300 mx-auto mb-4" />
+                                <h3 className="text-xl font-bold text-gray-400 mb-2">No Products Available</h3>
+                                <p className="text-gray-500">Products will appear here once the admin adds them.</p>
                             </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {filteredProducts.map((product) => (
+                                    <div
+                                        key={product.id}
+                                        className="group relative bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-100"
+                                    >
+                                        {/* Product Image Area */}
+                                        <div className="h-48 overflow-hidden relative bg-[#F5F5F5] flex items-center justify-center">
+                                            <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-300"></div>
+                                            {product.image && (product.image.startsWith('http') || product.image.startsWith('/uploads')) ? (
+                                                <img
+                                                    src={product.image.startsWith('/uploads') 
+                                                        ? `http://localhost:5000${product.image}` 
+                                                        : product.image}
+                                                    alt={product.title}
+                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                                />
+                                            ) : (
+                                                <div className="transform group-hover:scale-110 transition-transform duration-500">
+                                                    <FaCoffee size={48} className="text-[#8B4513] opacity-80" />
+                                                </div>
+                                            )}
+                                        </div>
 
                             {/* Product Content */}
                             <div className="p-6">
@@ -170,9 +169,12 @@ const BestSellers = () => {
                                 </button>
                             </div>
 
-                        </div>
-                    ))}
-                </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
         </section>
     );

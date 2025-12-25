@@ -26,16 +26,10 @@ const MenuPage = () => {
   const navigate = useNavigate();
   const { cartCount, addToCart } = useCart();
 
-
-  const menuCategories = [
+  // Dynamic categories based on products in database
+  const [menuCategories, setMenuCategories] = useState([
     { id: "all", label: "All Items", icon: <FaCoffee /> },
-    { id: "espresso", label: "Espresso", icon: <FaMugHot /> },
-    { id: "brew", label: "Brewed", icon: <FaCoffee /> },
-    { id: "cold", label: "Cold Brew", icon: <FaSnowflake /> },
-    { id: "tea", label: "Tea", icon: <FaLeaf /> },
-    { id: "pastry", label: "Pastries", icon: <FaBreadSlice /> },
-    { id: "special", label: "Specialty", icon: <FaStar /> },
-  ];
+  ]);
 
   // Fetch products from API
   useEffect(() => {
@@ -46,7 +40,7 @@ const MenuPage = () => {
         const transformedProducts = data.map((product) => ({
           id: product._id,
           name: product.name,
-          category: product.category.toLowerCase(),
+          category: product.category?.toLowerCase() || "all",
           description: product.description || "",
           price: product.price,
           image: product.image || "☕", // Use image URL or default emoji
@@ -64,6 +58,48 @@ const MenuPage = () => {
     fetchProducts();
   }, []);
 
+  // Update categories based on available products
+  useEffect(() => {
+    if (products.length > 0) {
+      const categoryMap = {
+        espresso: { id: "espresso", label: "Espresso", icon: <FaMugHot /> },
+        brew: { id: "brew", label: "Brewed", icon: <FaCoffee /> },
+        cold: { id: "cold", label: "Cold Brew", icon: <FaSnowflake /> },
+        tea: { id: "tea", label: "Tea", icon: <FaLeaf /> },
+        pastry: { id: "pastry", label: "Pastries", icon: <FaBreadSlice /> },
+        special: { id: "special", label: "Specialty", icon: <FaStar /> },
+        specialty: { id: "special", label: "Specialty", icon: <FaStar /> },
+        black: { id: "black", label: "Black Coffee", icon: <FaCoffee /> },
+        simple: { id: "simple", label: "Simple Coffee", icon: <FaCoffee /> },
+        milk: { id: "milk", label: "Milk Coffee", icon: <FaMugHot /> },
+      };
+
+      const uniqueCategories = new Set();
+      products.forEach(product => {
+        const cat = product.category?.toLowerCase();
+        if (cat && categoryMap[cat]) {
+          uniqueCategories.add(cat);
+        } else if (cat && !categoryMap[cat]) {
+          // For unknown categories, create a generic entry
+          uniqueCategories.add(cat);
+        }
+      });
+
+      const dynamicCategories = [
+        { id: "all", label: "All Items", icon: <FaCoffee /> },
+        ...Array.from(uniqueCategories).map(cat => 
+          categoryMap[cat] || { 
+            id: cat, 
+            label: cat.charAt(0).toUpperCase() + cat.slice(1), 
+            icon: <FaCoffee /> 
+          }
+        )
+      ];
+
+      setMenuCategories(dynamicCategories);
+    }
+  }, [products]);
+
   const handleAddToCart = (item) => {
     addToCart({
       id: item.id,
@@ -79,220 +115,8 @@ const MenuPage = () => {
     );
   };
 
-  const menuItems = [
-    // Espresso Category
-    {
-      id: 1,
-      name: "Classic Espresso",
-      category: "espresso",
-      description: "Rich, bold single shot of our premium espresso",
-      price: 3.25,
-      image: "☕",
-      popular: true,
-      featured: false,
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      name: "Double Espresso",
-      category: "espresso",
-      description: "Two shots of our signature espresso for extra strength",
-      price: 4.50,
-      image: "☕",
-      popular: true,
-      featured: false,
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      name: "Caramel Macchiato",
-      category: "espresso",
-      description: "Espresso with vanilla syrup, steamed milk and caramel drizzle",
-      price: 5.75,
-      image: "☕",
-      popular: true,
-      featured: true,
-      rating: 4.9,
-    },
-    {
-      id: 4,
-      name: "Vanilla Latte",
-      category: "espresso",
-      description: "Smooth espresso with steamed milk and natural vanilla",
-      price: 5.25,
-      image: "☕",
-      popular: false,
-      featured: false,
-      rating: 4.7,
-    },
-
-    // Brewed Coffee Category
-    {
-      id: 5,
-      name: "House Blend Drip",
-      category: "brew",
-      description: "Our signature medium-roast blend with balanced flavor",
-      price: 2.95,
-      image: "☕",
-      popular: true,
-      featured: false,
-      rating: 4.6,
-    },
-    {
-      id: 6,
-      name: "French Press",
-      category: "brew",
-      description: "Full-bodied coffee with rich oils and intense flavor",
-      price: 4.25,
-      image: "☕",
-      popular: false,
-      featured: false,
-      rating: 4.5,
-    },
-    {
-      id: 7,
-      name: "Pour Over",
-      category: "brew",
-      description: "Single-origin beans brewed to perfection",
-      price: 4.75,
-      image: "☕",
-      popular: false,
-      featured: true,
-      rating: 4.8,
-    },
-
-    // Cold Brew Category
-    {
-      id: 8,
-      name: "Classic Cold Brew",
-      category: "cold",
-      description: "Smooth, less acidic cold brew steeped for 16 hours",
-      price: 4.50,
-      image: "🧊",
-      popular: true,
-      featured: false,
-      rating: 4.7,
-    },
-    {
-      id: 9,
-      name: "Vanilla Sweet Cream",
-      category: "cold",
-      description: "Cold brew topped with house-made vanilla sweet cream",
-      price: 5.75,
-      image: "🧊",
-      popular: true,
-      featured: true,
-      rating: 4.9,
-    },
-    {
-      id: 10,
-      name: "Iced Americano",
-      category: "cold",
-      description: "Espresso shots chilled with ice and water",
-      price: 4.25,
-      image: "🧊",
-      popular: false,
-      featured: false,
-      rating: 4.6,
-    },
-
-    // Tea Category
-    {
-      id: 11,
-      name: "Earl Grey",
-      category: "tea",
-      description: "Classic black tea with bergamot orange",
-      price: 3.50,
-      image: "🍃",
-      popular: false,
-      featured: false,
-      rating: 4.4,
-    },
-    {
-      id: 12,
-      name: "Chamomile Herbal",
-      category: "tea",
-      description: "Soothing herbal tea with honey notes",
-      price: 3.75,
-      image: "🍃",
-      popular: false,
-      featured: false,
-      rating: 4.3,
-    },
-    {
-      id: 13,
-      name: "Matcha Latte",
-      category: "tea",
-      description: "Premium matcha powder with steamed milk",
-      price: 5.50,
-      image: "🍃",
-      popular: true,
-      featured: true,
-      rating: 4.7,
-    },
-
-    // Pastries Category
-    {
-      id: 14,
-      name: "Almond Croissant",
-      category: "pastry",
-      description: "Flaky croissant filled with almond cream",
-      price: 4.25,
-      image: "🥐",
-      popular: true,
-      featured: false,
-      rating: 4.8,
-    },
-    {
-      id: 15,
-      name: "Chocolate Chip Cookie",
-      category: "pastry",
-      description: "Freshly baked with premium chocolate chunks",
-      price: 2.95,
-      image: "🍪",
-      popular: true,
-      featured: false,
-      rating: 4.9,
-    },
-    {
-      id: 16,
-      name: "Blueberry Muffin",
-      category: "pastry",
-      description: "Moist muffin bursting with fresh blueberries",
-      price: 3.50,
-      image: "🧁",
-      popular: false,
-      featured: false,
-      rating: 4.5,
-    },
-
-    // Specialty Category
-    {
-      id: 17,
-      name: "Seasonal Pumpkin Spice",
-      category: "special",
-      description: "Espresso with pumpkin spice and steamed milk",
-      price: 6.25,
-      image: "🎃",
-      popular: true,
-      featured: true,
-      rating: 4.8,
-    },
-    {
-      id: 18,
-      name: "Hazelnut Mocha",
-      category: "special",
-      description: "Rich chocolate with hazelnut and espresso",
-      price: 6.50,
-      image: "⭐",
-      popular: false,
-      featured: true,
-      rating: 4.7,
-    },
-  ];
-
-  // Combine hardcoded menu items with database products
-  const allMenuItems = [...menuItems, ...products];
+  // Use only database products - no hardcoded items
+  const allMenuItems = products;
 
   const filteredItems = allMenuItems.filter(item => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
@@ -483,10 +307,12 @@ const MenuPage = () => {
           <div className="text-center py-20">
             <div className="text-6xl mb-4 opacity-20 filter grayscale">☕</div>
             <h3 className="text-xl font-bold text-gray-400 mb-2 font-serif">
-              No items found
+              {products.length === 0 ? "No Products Available" : "No items found"}
             </h3>
             <p className="text-gray-400">
-              We couldn't find any items matching your search.
+              {products.length === 0 
+                ? "Products will appear here once the admin adds them to the menu."
+                : "We couldn't find any items matching your search."}
             </p>
           </div>
         )}

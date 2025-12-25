@@ -228,10 +228,10 @@ const AboutUs = () => {
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-brown-800 to-brown-900 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-6">
             Experience the Elite Difference
           </h2>
-          <p className="text-xl text-amber-200 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-amber-600 mb-8 max-w-2xl mx-auto">
             Visit us today and discover why we've been the community's favorite coffee 
             destination for over a decade.
           </p>
@@ -239,7 +239,7 @@ const AboutUs = () => {
             <button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-full font-semibold transition-all transform hover:scale-105">
               Visit Our Cafe
             </button>
-            <button className="border-2 border-white hover:bg-white hover:text-brown-900 text-white px-8 py-3 rounded-full font-semibold transition-all">
+            <button className="border-2 border-orange-600 hover:bg-white hover:text-brown-900 text-amber-600 px-8 py-3 rounded-full font-semibold transition-all">
               View Our Menu
             </button>
           </div>
