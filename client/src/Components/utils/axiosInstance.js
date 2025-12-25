@@ -38,6 +38,8 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem("accesstoken");
         localStorage.removeItem("role");
         localStorage.removeItem("userId");
+        localStorage.removeItem("userImage");
+        localStorage.removeItem("userName");
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }

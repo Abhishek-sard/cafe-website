@@ -21,6 +21,13 @@ const Login = () => {
             if (userId) {
                 localStorage.setItem("userId", userId);
             }
+            // Store user profile image and name
+            if (res.data.user.profileImage) {
+                localStorage.setItem("userImage", res.data.user.profileImage);
+            }
+            if (res.data.user.name) {
+                localStorage.setItem("userName", res.data.user.name);
+            }
             // Clear guest cart on login - user will get their own cart
             const guestCartKey = "eliteCafeCart_guest";
             localStorage.removeItem(guestCartKey);

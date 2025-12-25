@@ -1,10 +1,11 @@
 import express from "express";
 import { register, login, logout, userProfile, verifyEmail, forgotPassword, resetPassword, refreshToken } from "../controllers/authController.js";
 import { verifyToken, authorizeRoles } from "../middleware/auth.js";
+import uploadUser from "../middleware/uploadUser.js";
 
 const router = express.Router();
 
-router.post("/register", register);
+router.post("/register", uploadUser.single("profileImage"), register);
 router.post("/login", login);
 router.get("/logout", logout);
 router.get("/refresh-token", refreshToken);
