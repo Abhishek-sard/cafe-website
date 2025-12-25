@@ -6,15 +6,38 @@ import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 const Register = () => {
   const [data, setData] = useState({ name: "", email: "", password: "" });
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
     setData({ ...data, [e.target.name]: e.target.value });
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/auth/register", data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+
+      await axios.post("/auth/register", formData);
       alert("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {
@@ -64,6 +87,26 @@ const Register = () => {
                 onChange={handleChange}
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:border-[#8B4513] transition"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image (Optional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:border-[#8B4513] transition"
+              />
+              {imagePreview && (
+                <div className="mt-3">
+                  <p className="text-sm text-gray-600 mb-2">Preview:</p>
+                  <img
+                    src={imagePreview}
+                    alt="Profile preview"
+                    className="w-24 h-24 object-cover rounded-full border-2 border-[#8B4513]"
+                  />
+                </div>
+              )}
             </div>
 
             <button className="w-full bg-linear-to-r from-[#8B4513] to-[#A0522D] text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-[1.02] transition transform duration-200">

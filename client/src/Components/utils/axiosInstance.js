@@ -29,8 +29,17 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error("Refresh token failed", refreshError);
+        // Clear user-specific cart
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const userCartKey = `eliteCafeCart_${userId}`;
+          localStorage.removeItem(userCartKey);
+        }
         localStorage.removeItem("accesstoken");
         localStorage.removeItem("role");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userImage");
+        localStorage.removeItem("userName");
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }

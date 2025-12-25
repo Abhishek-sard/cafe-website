@@ -13,11 +13,17 @@ export const register = async (req, res) => {
     const hashPass = await bcrypt.hash(password, 10);
     const emailToken = crypto.randomBytes(32).toString("hex");
 
+    // Get profile image path from uploaded file
+    const profileImage = req.file 
+      ? `/uploads/users/${req.file.filename}` 
+      : "";
+
     const user = await User.create({
-      name, // Auto-verified for development
+      name,
       email,
       password: hashPass,
       role,
+      profileImage,
       emailToken,
       isVerified: true,
     });

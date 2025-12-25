@@ -34,10 +34,21 @@ const Navbar = () => {
 
   const isLoggedIn = !!localStorage.getItem("accesstoken");
   const userRole = localStorage.getItem("role");
+  const userImage = localStorage.getItem("userImage");
+  const userName = localStorage.getItem("userName") || "User";
 
   const handleLogout = () => {
+    // Clear user-specific cart
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      const userCartKey = `eliteCafeCart_${userId}`;
+      localStorage.removeItem(userCartKey);
+    }
     localStorage.removeItem("accesstoken");
     localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userImage");
+    localStorage.removeItem("userName");
     navigate("/login");
   };
 
@@ -138,6 +149,26 @@ const Navbar = () => {
 
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
+                {/* User Profile Image */}
+                <Link 
+                  to={userRole === "admin" ? "/admin" : "/user/dashboard"} 
+                  className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#8B4513] hover:border-[#A0522D] transition cursor-pointer"
+                  title={userName}
+                >
+                  {userImage ? (
+                    <img 
+                      src={userImage.startsWith('/uploads') 
+                        ? `http://localhost:5000${userImage}` 
+                        : userImage} 
+                      alt={userName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-yellow-100 flex items-center justify-center text-[#8B4513]">
+                      <FaUser />
+                    </div>
+                  )}
+                </Link>
                 <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Dashboard">
                   <FaTachometerAlt />
                 </Link>
@@ -196,6 +227,22 @@ const Navbar = () => {
 
             {isLoggedIn ? (
               <>
+                <div className="flex items-center gap-2 py-2">
+                  {userImage ? (
+                    <img 
+                      src={userImage.startsWith('/uploads') 
+                        ? `http://localhost:5000${userImage}` 
+                        : userImage} 
+                      alt={userName}
+                      className="w-8 h-8 rounded-full object-cover border border-[#8B4513]"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-[#8B4513]">
+                      <FaUser />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium">{userName}</span>
+                </div>
                 <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="flex items-center gap-2 py-2"><FaTachometerAlt /> Dashboard</Link>
                 <button onClick={handleLogout} className="flex items-center gap-2 py-2 text-red-600"><FaSignOutAlt /> Logout</button>
               </>
