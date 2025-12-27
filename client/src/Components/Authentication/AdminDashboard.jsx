@@ -21,6 +21,10 @@ const AdminDashboard = () => {
 
     // Queries State
     const [queries, setQueries] = useState([]);
+    const [queriesLoading, setQueriesLoading] = useState(true);
+    const [passwordData, setPasswordData] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    const [passwordLoading, setPasswordLoading] = useState(false);
+    const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState("orders");
 
@@ -51,10 +55,13 @@ const AdminDashboard = () => {
 
     const fetchQueries = async () => {
         try {
+            setQueriesLoading(true);
             const { data } = await axios.get("/queries");
             setQueries(data);
         } catch (error) {
             console.error(error);
+        } finally {
+            setQueriesLoading(false);
         }
     };
 
@@ -196,7 +203,30 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            return alert("New passwords do not match");
+        }
+        setPasswordLoading(true);
+        try {
+            await axios.post("/auth/change-password", {
+                oldPassword: passwordData.oldPassword,
+                newPassword: passwordData.newPassword
+            });
+            alert("Password changed successfully");
+            setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+        } catch (error) {
+            alert(error.response?.data?.message || "Failed to change password");
+        } finally {
+            setPasswordLoading(false);
+        }
+    };
+
+
     if (orderLoading && activeTab === 'orders') return <div className="p-10 flex justify-center"><div className="animate-spin h-10 w-10 border-4 border-orange-500 rounded-full border-t-transparent"></div></div>;
+    if (queriesLoading && activeTab === 'queries') return <div className="p-10 flex justify-center"><div className="animate-spin h-10 w-10 border-4 border-orange-500 rounded-full border-t-transparent"></div></div>;
+
 
     return (
         <div className="p-8 bg-gray-50 min-h-screen">
@@ -206,7 +236,12 @@ const AdminDashboard = () => {
             <div className="flex gap-4 mb-8 border-b">
                 <button onClick={() => setActiveTab("orders")} className={`pb-2 px-4 font-semibold ${activeTab === 'orders' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>Orders</button>
                 <button onClick={() => setActiveTab("products")} className={`pb-2 px-4 font-semibold ${activeTab === 'products' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>Products</button>
-                <button onClick={() => setActiveTab("queries")} className={`pb-2 px-4 font-semibold ${activeTab === 'queries' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>Queries</button>
+                <button onClick={() => setActiveTab('queries')} className={`pb-2 px-4 font-semibold ${activeTab === 'queries' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>
+                    <FaMessage className="inline-block mr-1" /> Queries
+                </button>
+                <button onClick={() => setActiveTab('security')} className={`pb-2 px-4 font-semibold ${activeTab === 'security' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>
+                    <FaShieldAlt className="inline-block mr-1" /> Security
+                </button>
             </div>
 
             {/* ORDERS TAB */}
@@ -461,6 +496,59 @@ const AdminDashboard = () => {
                         </table>
                     </div>
                     {queries.length === 0 && <div className="p-12 text-center text-gray-400">No new messages from customers.</div>}
+                </div>
+            )}
+
+            {activeTab === "security" && (
+                <div className="max-w-2xl bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                    <h2 className="text-2xl font-bold text-[#8B4513] font-serif mb-6 flex items-center gap-2">
+                        <FaShieldAlt className="text-orange-500" />
+                        Change Password
+                    </h2>
+
+                    <form onSubmit={handleChangePassword} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Current Password</label>
+                            <input
+                                type="password"
+                                required
+                                value={passwordData.oldPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition"
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">New Password</label>
+                                <input
+                                    type="password"
+                                    required
+                                    value={passwordData.newPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    required
+                                    value={passwordData.confirmPassword}
+                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 transition"
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={passwordLoading}
+                            className="bg-orange-600 text-white px-8 py-3 rounded-full font-bold hover:bg-orange-700 transition shadow-lg disabled:opacity-50"
+                        >
+                            {passwordLoading ? "UPDATING..." : "UPDATE PASSWORD"}
+                        </button>
+                    </form>
                 </div>
             )}
         </div>

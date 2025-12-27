@@ -1,17 +1,17 @@
 import nodemailer from 'nodemailer';
 
-export const sendEmail = async (to, subject, text) =>{
+export const sendEmail = async (to, subject, text) => {
     const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
-            user: process.env.EMS_USER,
-            pass: process.env.EMS_PASS
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         },
-        
+
     });
 
     await transporter.sendMail({
-        from: process.env.EMS_USER,
+        from: process.env.EMAIL_USER,
         to,
         subject,
         text,
