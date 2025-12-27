@@ -30,18 +30,15 @@ const Hero = () => {
 
   return (
     <section className="relative w-full h-[600px] md:h-[700px] overflow-hidden flex items-center justify-center text-center text-white">
-      {/* Background Video */}
-      <video
+      {/* Background Image */}
+      <img
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
-        src="https://joy1.videvo.net/videvo_files/video/free/2019-11/large_watermarked/190301_1_25_11_preview.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
+        src="/src/assets/hero-cafe.png"
+        alt="Elite Cafe Hero"
       />
 
-      {/* Dark Overlay for Readability */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/60 z-10"></div>
+      {/* Light Overlay for Clarity & Readability */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
 
       {/* Content */}
       <div className="relative z-20 px-4 max-w-4xl mx-auto space-y-6 animate-fade-in-up">

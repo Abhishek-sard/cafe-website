@@ -8,66 +8,93 @@ const CompanyProfile = () => {
 
       {/* COVER SECTION */}
       <section
-        className="h-[80vh] bg-cover bg-center bg-fixed flex items-center justify-center text-light-text text-center px-6"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(139,69,19,0.85),rgba(139,69,19,0.9)),url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1147&q=80')",
-        }}
+        className="h-[80vh] bg-cover bg-center bg-fixed flex items-center justify-center text-light-text text-center px-6 relative overflow-hidden"
       >
-        <div>
+        {/* HD Background Image */}
+        <img
+          src="/src/assets/company-hero.png"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          alt="Elite Cafe Interior"
+        />
+        {/* Overlay for better text visibility */}
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
+
+        <div className="relative z-20">
           <div className="text-6xl text-accent-gold mb-4 text-center flex justify-center text-yellow-500">
             <FaMugHot />
           </div>
-          <h1 className="text-5xl font-bold mb-4 text-white">Welcome to Elite Cafe</h1>
-          <p className="text-xl text-white">
-            The perfect blend of taste, quality & tradition.
+          <h1 className="text-5xl font-bold mb-4 text-white drop-shadow-2xl">Welcome to Elite Cafe</h1>
+          <p className="text-xl text-white font-light tracking-wide drop-shadow-lg">
+            The perfect blend of taste, quality & tradition since 2010.
           </p>
         </div>
       </section>
 
       {/* ABOUT SECTION */}
-      <section className="py-20 bg-white">
-        <h2 className="section-title text-center text-4xl font-bold text-primary-brown mb-12 relative mx-auto after:content-[''] after:w-24 after:h-1 after:bg-accent-gold after:block after:mx-auto after:mt-2">
+      <section className="py-24 bg-white">
+        <h2 className="section-title text-center text-4xl font-bold text-[#8B4513] mb-16 relative mx-auto after:content-[''] after:w-24 after:h-1 after:bg-yellow-500 after:block after:mx-auto after:mt-2">
           About Us
         </h2>
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 px-6">
-          <div>
-            <img
-              src="https://images.unsplash.com/photo-1517244869275-5bc002b2a9f7"
-              className="rounded-lg shadow-xl"
-              alt=""
-            />
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 px-6 items-center">
+          <div className="grid grid-cols-2 gap-4 relative group">
+            *
+            <div className="pt-12 col-span-2">
+              <div className="relative">
+                <div className="absolute -inset-2 bg-yellow-500/10 rounded-xl blur-md"></div>
+                <img
+                  src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80"
+                  className="rounded-xl shadow-xl relative z-10 transition duration-500 w-full h-120 max-w-2xl mx-auto hover:scale-[1.05]"
+                  alt="Our Story 3"
+                />
+              </div>
+            </div>
+
           </div>
 
-          <div>
-            <h3 className="text-2xl font-semibold text-secondary-brown mb-4">
-              Our Story
-            </h3>
-            <p className="mb-6">
-              Elite Cafe started its journey to bring the finest taste experience
-              to coffee lovers. With passion and dedication, we grew to become a
-              trusted name.
-            </p>
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-3xl font-bold text-[#8B4513] mb-6 border-l-4 border-yellow-500 pl-4">
+                Our Legacy of Flavor
+              </h3>
+              <p className="text-gray-700 leading-relaxed text-lg">
+                Elite Cafe started its journey with a singular vision: to create a sanctuary for coffee lovers where every sip tells a story of craftsmanship. What began as a small corner shop has blossomed into a destination known for its uncompromising standards and warm community spirit.
+              </p>
+              <p className="text-gray-700 leading-relaxed mt-4 text-lg">
+                We take pride in our direct-trade relationships with coffee farmers, ensuring that every bean is ethically sourced and roasted to perfection in small batches to preserve its unique character.
+              </p>
+            </div>
 
             {/* TIMELINE */}
-            <div>
-              <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
-                <p className="font-bold text-primary-brown">2010</p>
-                <p>Founded Elite Cafe with a small team.</p>
+            <div className="space-y-6 pt-4">
+              <div className="flex gap-6 items-start">
+                <div className="mt-1">
+                  <span className="w-10 h-10 bg-yellow-100 text-[#8B4513] rounded-full flex items-center justify-center font-bold text-sm border-2 border-yellow-500">2010</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-lg">Foundation</h4>
+                  <p className="text-gray-600">The first Elite Cafe opened its doors, fueled by passion and a dream to redefine coffee culture.</p>
+                </div>
               </div>
 
-              <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
-                <p className="font-bold text-primary-brown">2015</p>
-                <p>Expanded to multiple locations.</p>
+              <div className="flex gap-6 items-start">
+                <div className="mt-1">
+                  <span className="w-10 h-10 bg-yellow-100 text-[#8B4513] rounded-full flex items-center justify-center font-bold text-sm border-2 border-yellow-500">2015</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-lg">Expansion</h4>
+                  <p className="text-gray-600">Recognized as the region's top-rated cafe, we expanded to five vibrant new locations.</p>
+                </div>
               </div>
 
-              <div className="mb-4 pl-8 relative">
-                <span className="absolute left-0 top-1 w-4 h-4 bg-yellow-500 rounded-full"></span>
-                <p className="font-bold text-primary-brown">2020</p>
-                <p>Launched premium product line.</p>
+              <div className="flex gap-6 items-start">
+                <div className="mt-1">
+                  <span className="w-10 h-10 bg-yellow-100 text-[#8B4513] rounded-full flex items-center justify-center font-bold text-sm border-2 border-yellow-500">2020</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 text-lg">Innovation</h4>
+                  <p className="text-gray-600">Launched our proprietary cold-brew technique and ultra-premium Reserve bean line.</p>
+                </div>
               </div>
             </div>
           </div>

@@ -33,9 +33,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const isLoggedIn = !!localStorage.getItem("accesstoken");
-  const userRole = localStorage.getItem("role");
-  const userImage = localStorage.getItem("userImage");
-  const userName = localStorage.getItem("userName") || "User";
+  const userRole = isLoggedIn ? localStorage.getItem("role") : null;
+  const userImage = isLoggedIn ? localStorage.getItem("userImage") : null;
+  const userName = isLoggedIn ? (localStorage.getItem("userName") || "User") : null;
 
   const handleLogout = () => {
     // Clear user-specific cart
@@ -135,25 +135,27 @@ const Navbar = () => {
 
           {/* Icons + Mobile Menu Button */}
           <div className="flex items-center gap-4">
-            <Link
-              to="/cart"
-              className="relative text-[#5D4037] hover:text-[#8B4513]"
-            >
-              <FaShoppingCart className="text-2xl" />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-2">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            {isLoggedIn && userRole !== "admin" && (
+              <Link
+                to="/cart"
+                className="relative text-[#5D4037] hover:text-[#8B4513]"
+              >
+                <FaShoppingCart className="text-2xl" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-2">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
-                {/* User Profile Image */}
+                {/* User Profile Image as Dashboard Link */}
                 <Link
                   to={userRole === "admin" ? "/admin" : "/user/dashboard"}
                   className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#8B4513] hover:border-[#A0522D] transition cursor-pointer"
-                  title={userName}
+                  title="Go to Dashboard"
                 >
                   {userImage ? (
                     <img
@@ -169,16 +171,14 @@ const Navbar = () => {
                     </div>
                   )}
                 </Link>
-                <Link to={userRole === "admin" ? "/admin" : "/user/dashboard"} className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Dashboard">
-                  <FaTachometerAlt />
-                </Link>
+
                 <button onClick={handleLogout} className="w-10 h-10 bg-red-100 flex items-center justify-center rounded-full text-red-600 hover:bg-red-600 hover:text-white" title="Logout">
                   <FaSignOutAlt />
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="w-10 h-10 bg-yellow-100 flex items-center justify-center rounded-full text-[#8B4513] hover:bg-[#8B4513] hover:text-white" title="Login">
-                <FaUser />
+              <Link to="/login" className="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-[#8B4513] rounded-full hover:bg-[#8B4513] hover:text-white transition font-semibold">
+                Login
               </Link>
             )}
 
@@ -216,14 +216,16 @@ const Navbar = () => {
               )}
             </div>
 
-            <Link to="/cart" className="flex items-center gap-2 py-2">
-              <FaShoppingCart /> Cart
-              {cartCount > 0 && (
-                <span className="ml-auto bg-orange-500 text-white text-xs rounded-full px-2">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            {userRole !== "admin" && (
+              <Link to="/cart" className="flex items-center gap-2 py-2">
+                <FaShoppingCart /> Cart
+                {cartCount > 0 && (
+                  <span className="ml-auto bg-orange-500 text-white text-xs rounded-full px-2">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {isLoggedIn ? (
               <>
@@ -247,8 +249,8 @@ const Navbar = () => {
                 <button onClick={handleLogout} className="flex items-center gap-2 py-2 text-red-600"><FaSignOutAlt /> Logout</button>
               </>
             ) : (
-              <Link to="/login" className="flex items-center gap-2 py-2">
-                <FaUser /> Login
+              <Link to="/login" className="flex items-center gap-2 py-2 font-bold text-[#8B4513]">
+                Login
               </Link>
             )}
           </ul>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import React from "react";
 import axios from "../utils/axiosInstance";
-import { FaBox, FaMoneyBillWave, FaClock, FaCheckCircle, FaSearch, FaCoffee, FaEnvelope, FaTrash, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaBox, FaMoneyBillWave, FaClock, FaCheckCircle, FaSearch, FaCoffee, FaEnvelope, FaTrash, FaPlus, FaShieldAlt } from "react-icons/fa";
 
 const AdminDashboard = () => {
     // Orders State
@@ -237,8 +238,9 @@ const AdminDashboard = () => {
                 <button onClick={() => setActiveTab("orders")} className={`pb-2 px-4 font-semibold ${activeTab === 'orders' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>Orders</button>
                 <button onClick={() => setActiveTab("products")} className={`pb-2 px-4 font-semibold ${activeTab === 'products' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>Products</button>
                 <button onClick={() => setActiveTab('queries')} className={`pb-2 px-4 font-semibold ${activeTab === 'queries' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>
-                    <FaMessage className="inline-block mr-1" /> Queries
+                    <FaEnvelope className="inline-block mr-1" /> Queries
                 </button>
+
                 <button onClick={() => setActiveTab('security')} className={`pb-2 px-4 font-semibold ${activeTab === 'security' ? 'border-b-4 border-[#8B4513] text-[#8B4513]' : 'text-gray-500'}`}>
                     <FaShieldAlt className="inline-block mr-1" /> Security
                 </button>

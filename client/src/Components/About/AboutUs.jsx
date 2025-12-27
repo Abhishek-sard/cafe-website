@@ -6,11 +6,20 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-brown-900 to-brown-800 text-white py-20">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Our Story</h1>
-          <p className="text-xl md:text-2xl text-amber-200 max-w-3xl mx-auto">
+      <section className="relative w-full h-[400px] flex items-center justify-center text-center text-white overflow-hidden">
+        {/* Background Image */}
+        <img
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+          src="/src/assets/about-hero.png"
+          alt="Elite Cafe Story"
+        />
+
+        {/* Light Overlay for Clarity & Readability */}
+        <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-10"></div>
+
+        <div className="relative z-20 max-w-6xl mx-auto px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Our Story</h1>
+          <p className="text-xl md:text-2xl text-amber-200 max-w-3xl mx-auto drop-shadow-md">
             Crafting exceptional coffee experiences since 2010, one cup at a time
           </p>
         </div>
@@ -36,26 +45,37 @@ const AboutUs = () => {
                 beloved destination for coffee lovers.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-amber-100 rounded-2xl p-6 text-center">
-                <FaCoffee className="text-4xl text-brown-600 mx-auto mb-4" />
-                <h3 className="font-bold text-brown-900 text-lg">50+</h3>
-                <p className="text-brown-700">Coffee Varieties</p>
+            <div className="space-y-8">
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-[#8B4513]/5 rounded-2xl blur-lg group-hover:bg-[#8B4513]/10 transition duration-500"></div>
+                <img
+                  src="/src/assets/our-story.png"
+                  className="rounded-2xl shadow-2xl relative z-10 transition duration-500 hover:scale-[1.02] w-full h-[300px] object-cover"
+                  alt="Our Coffee Passion"
+                />
               </div>
-              <div className="bg-orange-100 rounded-2xl p-6 text-center">
-                <FaUsers className="text-4xl text-brown-600 mx-auto mb-4" />
-                <h3 className="font-bold text-brown-900 text-lg">10,000+</h3>
-                <p className="text-brown-700">Happy Customers</p>
-              </div>
-              <div className="bg-orange-100 rounded-2xl p-6 text-center">
-                <FaAward className="text-4xl text-brown-600 mx-auto mb-4" />
-                <h3 className="font-bold text-brown-900 text-lg">15</h3>
-                <p className="text-brown-700">Industry Awards</p>
-              </div>
-              <div className="bg-amber-100 rounded-2xl p-6 text-center">
-                <FaClock className="text-4xl text-brown-600 mx-auto mb-4" />
-                <h3 className="font-bold text-brown-900 text-lg">13 Years</h3>
-                <p className="text-brown-700">Of Excellence</p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-amber-100 rounded-2xl p-6 text-center border border-amber-200">
+                  <FaCoffee className="text-4xl text-[#8B4513] mx-auto mb-4" />
+                  <h3 className="font-bold text-[#8B4513] text-lg">50+</h3>
+                  <p className="text-amber-900 text-sm">Coffee Varieties</p>
+                </div>
+                <div className="bg-orange-100 rounded-2xl p-6 text-center border border-orange-200">
+                  <FaUsers className="text-4xl text-[#8B4513] mx-auto mb-4" />
+                  <h3 className="font-bold text-[#8B4513] text-lg">10,000+</h3>
+                  <p className="text-orange-900 text-sm">Happy Customers</p>
+                </div>
+                <div className="bg-orange-100 rounded-2xl p-6 text-center border border-orange-200">
+                  <FaAward className="text-4xl text-[#8B4513] mx-auto mb-4" />
+                  <h3 className="font-bold text-[#8B4513] text-lg">15</h3>
+                  <p className="text-orange-900 text-sm">Industry Awards</p>
+                </div>
+                <div className="bg-amber-100 rounded-2xl p-6 text-center border border-amber-200">
+                  <FaClock className="text-4xl text-[#8B4513] mx-auto mb-4" />
+                  <h3 className="font-bold text-[#8B4513] text-lg">13 Years</h3>
+                  <p className="text-amber-900 text-sm">Of Excellence</p>
+                </div>
               </div>
             </div>
           </div>
