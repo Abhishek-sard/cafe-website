@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full bg-gray-100 text-brown-700">
+    <div className="fixed top-0 left-0 w-full z-50 bg-gray-100 text-brown-700">
 
       {/* ---------- TOP BAR ---------- */}
       <div className="bg-[#8B4513] text-white text-sm py-2">
@@ -79,7 +79,7 @@ const Navbar = () => {
       </div>
 
       {/* ---------- MAIN NAVBAR ---------- */}
-      <nav className="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 transition-all duration-300">
+      <nav className="bg-white/90 backdrop-blur-md shadow-md transition-all duration-300">
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4 py-4">
 
           {/* Logo */}
@@ -150,16 +150,16 @@ const Navbar = () => {
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
                 {/* User Profile Image */}
-                <Link 
-                  to={userRole === "admin" ? "/admin" : "/user/dashboard"} 
+                <Link
+                  to={userRole === "admin" ? "/admin" : "/user/dashboard"}
                   className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-[#8B4513] hover:border-[#A0522D] transition cursor-pointer"
                   title={userName}
                 >
                   {userImage ? (
-                    <img 
-                      src={userImage.startsWith('/uploads') 
-                        ? `http://localhost:5000${userImage}` 
-                        : userImage} 
+                    <img
+                      src={userImage.startsWith('/uploads')
+                        ? `http://localhost:5000${userImage}`
+                        : userImage}
                       alt={userName}
                       className="w-full h-full object-cover"
                     />
@@ -229,10 +229,10 @@ const Navbar = () => {
               <>
                 <div className="flex items-center gap-2 py-2">
                   {userImage ? (
-                    <img 
-                      src={userImage.startsWith('/uploads') 
-                        ? `http://localhost:5000${userImage}` 
-                        : userImage} 
+                    <img
+                      src={userImage.startsWith('/uploads')
+                        ? `http://localhost:5000${userImage}`
+                        : userImage}
                       alt={userName}
                       className="w-8 h-8 rounded-full object-cover border border-[#8B4513]"
                     />

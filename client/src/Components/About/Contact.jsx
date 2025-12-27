@@ -85,7 +85,7 @@ const Contact = () => {
               </div>
               <div>
                 <h3 className="text-2xl text-[#8B4513] font-bold">Address</h3>
-                <p className="mt-1 text-lg">New Baneshwor, Kathmandu, Nepal</p>
+                <p className="mt-1 text-lg">123 Cafe Street, New York, NY 10001, USA</p>
               </div>
             </div>
 
