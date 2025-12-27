@@ -18,3 +18,13 @@ export const getAllQueries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const deleteQuery = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Query.findByIdAndDelete(id);
+        res.json({ message: "Query deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -133,7 +133,7 @@ const AdminDashboard = () => {
 
             // Let the browser set the correct multipart Content-Type with boundary
             await axios.post("/products", formData);
-            
+
             alert("Product added!");
             setShowAddProduct(false);
             setNewProduct({ name: "", category: "", price: "", description: "" });
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
             const errorDetails = error.response?.data?.details || "";
             const fullMessage = errorDetails ? `${errorMessage}\n${errorDetails}` : errorMessage;
             alert(`Failed to add product: ${fullMessage}`);
-            
+
             // If access denied, suggest re-login
             if (error.response?.status === 403) {
                 const shouldRelogin = confirm("Access Denied. Your session may have expired or your role may have changed. Would you like to log out and log back in?");
@@ -171,7 +171,7 @@ const AdminDashboard = () => {
             const errorDetails = error.response?.data?.details || "";
             const fullMessage = errorDetails ? `${errorMessage}\n${errorDetails}` : errorMessage;
             alert(`Failed to delete product: ${fullMessage}`);
-            
+
             // If access denied, suggest re-login
             if (error.response?.status === 403) {
                 const shouldRelogin = confirm("Access Denied. Your session may have expired or your role may have changed. Would you like to log out and log back in?");
@@ -181,6 +181,18 @@ const AdminDashboard = () => {
                     window.location.href = "/login";
                 }
             }
+        }
+    };
+
+    const handleDeleteQuery = async (id) => {
+        if (!confirm("Are you sure you want to delete this query?")) return;
+        try {
+            await axios.delete(`/queries/${id}`);
+            setQueries(prev => prev.filter(q => q._id !== id));
+            alert("Query deleted successfully");
+        } catch (error) {
+            console.error("Error deleting query:", error);
+            alert("Failed to delete query");
         }
     };
 
@@ -332,30 +344,30 @@ const AdminDashboard = () => {
                         <div className="bg-white p-6 rounded shadow-md border animate-fade-in">
                             <h3 className="font-bold mb-4">Add New Product</h3>
                             <div className="grid grid-cols-2 gap-4">
-                                <input 
-                                    placeholder="Product Name" 
-                                    className="border p-2 rounded" 
-                                    value={newProduct.name} 
-                                    onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} 
+                                <input
+                                    placeholder="Product Name"
+                                    className="border p-2 rounded"
+                                    value={newProduct.name}
+                                    onChange={e => setNewProduct({ ...newProduct, name: e.target.value })}
                                 />
-                                <input 
-                                    placeholder="Category" 
-                                    className="border p-2 rounded" 
-                                    value={newProduct.category} 
-                                    onChange={e => setNewProduct({ ...newProduct, category: e.target.value })} 
+                                <input
+                                    placeholder="Category"
+                                    className="border p-2 rounded"
+                                    value={newProduct.category}
+                                    onChange={e => setNewProduct({ ...newProduct, category: e.target.value })}
                                 />
-                                <input 
-                                    placeholder="Price" 
-                                    type="number" 
+                                <input
+                                    placeholder="Price"
+                                    type="number"
                                     step="0.01"
-                                    className="border p-2 rounded" 
-                                    value={newProduct.price} 
-                                    onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} 
+                                    className="border p-2 rounded"
+                                    value={newProduct.price}
+                                    onChange={e => setNewProduct({ ...newProduct, price: e.target.value })}
                                 />
                                 <div className="col-span-2">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
-                                    <input 
-                                        type="file" 
+                                    <input
+                                        type="file"
                                         accept="image/*"
                                         className="border p-2 rounded w-full"
                                         onChange={handleImageChange}
@@ -363,19 +375,19 @@ const AdminDashboard = () => {
                                     {imagePreview && (
                                         <div className="mt-4">
                                             <p className="text-sm text-gray-600 mb-2">Preview:</p>
-                                            <img 
-                                                src={imagePreview} 
-                                                alt="Preview" 
+                                            <img
+                                                src={imagePreview}
+                                                alt="Preview"
                                                 className="w-32 h-32 object-cover rounded border"
                                             />
                                         </div>
                                     )}
                                 </div>
-                                <textarea 
-                                    placeholder="Description" 
-                                    className="border p-2 rounded col-span-2" 
-                                    value={newProduct.description} 
-                                    onChange={e => setNewProduct({ ...newProduct, description: e.target.value })} 
+                                <textarea
+                                    placeholder="Description"
+                                    className="border p-2 rounded col-span-2"
+                                    value={newProduct.description}
+                                    onChange={e => setNewProduct({ ...newProduct, description: e.target.value })}
                                 />
                             </div>
                             <button onClick={handleAddProduct} className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Product</button>
@@ -386,12 +398,12 @@ const AdminDashboard = () => {
                         {products.map(product => (
                             <div key={product._id} className="bg-white p-4 rounded shadow flex flex-col relative">
                                 {product.image && (product.image.startsWith('http') || product.image.startsWith('/uploads')) ? (
-                                    <img 
-                                        src={product.image.startsWith('/uploads') 
-                                            ? `http://localhost:5000${product.image}` 
-                                            : product.image} 
-                                        alt={product.name} 
-                                        className="h-40 w-full object-cover rounded mb-4" 
+                                    <img
+                                        src={product.image.startsWith('/uploads')
+                                            ? `http://localhost:5000${product.image}`
+                                            : product.image}
+                                        alt={product.name}
+                                        className="h-40 w-full object-cover rounded mb-4"
                                     />
                                 ) : (
                                     <div className="h-40 w-full flex items-center justify-center text-6xl bg-gray-100 rounded mb-4">
@@ -423,6 +435,7 @@ const AdminDashboard = () => {
                                     <th className="py-4 px-6 text-left font-bold">Email</th>
                                     <th className="py-4 px-6 text-left font-bold">Subject</th>
                                     <th className="py-4 px-6 text-left font-bold">Message</th>
+                                    <th className="py-4 px-6 text-left font-bold">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="text-gray-600 text-sm font-light">
@@ -433,6 +446,15 @@ const AdminDashboard = () => {
                                         <td className="py-4 px-6 text-left text-[#8B4513] underline text-xs">{q.email}</td>
                                         <td className="py-4 px-6 text-left font-bold text-gray-800">{q.subject}</td>
                                         <td className="py-4 px-6 text-left max-w-xs truncate">{q.message}</td>
+                                        <td className="py-4 px-6 text-left">
+                                            <button
+                                                onClick={() => handleDeleteQuery(q._id)}
+                                                className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-50"
+                                                title="Delete Query"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
