@@ -3,7 +3,7 @@ import {
   FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn,
   FaHome, FaUtensils, FaInfoCircle, FaShoppingCart,
   FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock,
-  FaCcVisa, FaCcMastercard, FaCcAmex, FaCcPaypal, FaCcApplePay, FaGoogleWallet
+  FaCcVisa, FaCcMastercard, FaCcPaypal, FaQrcode
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -59,7 +59,7 @@ const Footer = () => {
           <ul className="space-y-3 text-sm">
             <li className="flex items-start gap-2"><FaEnvelope className="text-[#F4A460] mt-1" /> elitecafe23@gmail.com</li>
             <li className="flex items-start gap-2"><FaPhone className="text-[#F4A460] mt-1" /> +1 251 280 5086</li>
-            <li className="flex items-start gap-2"><FaMapMarkerAlt className="text-[#F4A460] mt-1" /> New Baneshwor, Kathmandu</li>
+            <li className="flex items-start gap-2"><FaMapMarkerAlt className="text-[#F4A460] mt-1" /> 123 Cafe Street, New York, USA</li>
             <li className="flex items-start gap-2"><FaClock className="text-[#F4A460] mt-1" /> Mon-Sun: 7 AM - 10 PM</li>
           </ul>
         </div>
@@ -84,10 +84,19 @@ const Footer = () => {
 
           <h4 className="text-[#F4A460] font-semibold mb-2 text-sm">We Accept</h4>
 
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-xl">
-            {[FaCcVisa, FaCcMastercard, FaCcAmex, FaCcPaypal, FaCcApplePay, FaGoogleWallet].map((Icon, idx) => (
-              <Icon key={idx} className="text-white/80 hover:text-[#F4A460] transition text-2xl" />
-            ))}
+          <div className="flex flex-wrap gap-4 text-2xl">
+            <div className="flex items-center gap-1 group">
+              <FaCcVisa className="text-white/80 group-hover:text-[#F4A460] transition" />
+            </div>
+            <div className="flex items-center gap-1 group">
+              <FaCcMastercard className="text-white/80 group-hover:text-[#F4A460] transition" />
+            </div>
+            <div className="flex items-center gap-1 group">
+              <FaCcPaypal className="text-white/80 group-hover:text-[#F4A460] transition" />
+            </div>
+            <div className="flex items-center gap-1 group border-l border-white/20 pl-4">
+              <FaQrcode className="text-white/80 group-hover:text-pink-500 transition" />
+            </div>
           </div>
         </div>
 
