@@ -18,7 +18,7 @@ import Login from "./Components/Authentication/Login.jsx";
 import VerifyEmail from "./Components/Authentication/VerifyEmail.jsx";
 import ForgotPassword from "./Components/Authentication/ForgetPassword.jsx";
 import ResetPassword from "./Components/Authentication/ResetPassword.jsx";
-import UserDashboard from "./Components/Authentication/UserDashbaord.jsx";
+import UserDashboard from "./Components/Authentication/UserDashboard.jsx";
 import AdminDashboard from "./Components/Authentication/AdminDashboard.jsx";
 import CheckoutPage from "./Components/Cart/CheckoutPage.jsx";
 import ProtectedRoute from "./Components/utils/ProtectedRoute.jsx";

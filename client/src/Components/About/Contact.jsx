@@ -28,10 +28,10 @@ const Contact = () => {
 
       {/* HERO */}
       <section
-        className="text-white text-center py-24 px-6"
+        className="text-white text-center py-24 px-6 relative overflow-hidden"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(139, 69, 19, 0.85), rgba(139, 69, 19, 0.9)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085')",
+            "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('/src/assets/contact-hero.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
