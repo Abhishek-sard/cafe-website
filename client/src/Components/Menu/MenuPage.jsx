@@ -10,7 +10,7 @@ import {
   FaLeaf,
   FaSnowflake,
   FaBreadSlice,
-  FaMugHot
+  FaMugHot,
 } from "react-icons/fa";
 import { useCart } from "../Cart/CartContext.jsx";
 import { useNavigate } from "react-router-dom";
@@ -75,7 +75,7 @@ const MenuPage = () => {
       };
 
       const uniqueCategories = new Set();
-      products.forEach(product => {
+      products.forEach((product) => {
         const cat = product.category?.toLowerCase();
         if (cat && categoryMap[cat]) {
           uniqueCategories.add(cat);
@@ -87,13 +87,14 @@ const MenuPage = () => {
 
       const dynamicCategories = [
         { id: "all", label: "All Items", icon: <FaCoffee /> },
-        ...Array.from(uniqueCategories).map(cat => 
-          categoryMap[cat] || { 
-            id: cat, 
-            label: cat.charAt(0).toUpperCase() + cat.slice(1), 
-            icon: <FaCoffee /> 
-          }
-        )
+        ...Array.from(uniqueCategories).map(
+          (cat) =>
+            categoryMap[cat] || {
+              id: cat,
+              label: cat.charAt(0).toUpperCase() + cat.slice(1),
+              icon: <FaCoffee />,
+            }
+        ),
       ];
 
       setMenuCategories(dynamicCategories);
@@ -118,9 +119,11 @@ const MenuPage = () => {
   // Use only database products - no hardcoded items
   const allMenuItems = products;
 
-  const filteredItems = allMenuItems.filter(item => {
-    const matchesCategory = activeCategory === "all" || item.category === activeCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredItems = allMenuItems.filter((item) => {
+    const matchesCategory =
+      activeCategory === "all" || item.category === activeCategory;
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -147,8 +150,9 @@ const MenuPage = () => {
         {[...Array(5)].map((_, index) => (
           <FaStar
             key={index}
-            className={`text-xs ${index < Math.floor(rating) ? "text-[#DEB887]" : "text-gray-200"
-              }`}
+            className={`text-xs ${
+              index < Math.floor(rating) ? "text-[#DEB887]" : "text-gray-200"
+            }`}
           />
         ))}
         <span className="text-xs text-gray-400 ml-1">({rating})</span>
@@ -163,8 +167,12 @@ const MenuPage = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="text-center md:text-left">
-              <h1 className="text-2xl font-serif font-bold text-gray-900">Our Menu</h1>
-              <p className="text-sm text-gray-500">Handcrafted beverages & fresh pastries</p>
+              <h1 className="text-2xl font-serif font-bold text-gray-900">
+                Our Menu
+              </h1>
+              <p className="text-sm text-gray-500">
+                Handcrafted beverages & fresh pastries
+              </p>
             </div>
 
             {/* Search Bar */}
@@ -183,20 +191,19 @@ const MenuPage = () => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-
         {/* Controls Bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
-
           {/* Category Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-4 lg:pb-0 no-scrollbar">
             {menuCategories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setActiveCategory(category.id)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap border ${activeCategory === category.id
-                  ? "bg-[#8B4513] text-white border-[#8B4513] shadow-md transform scale-105"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#8B4513] hover:text-[#8B4513]"
-                  }`}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap border ${
+                  activeCategory === category.id
+                    ? "bg-[#8B4513] text-white border-[#8B4513] shadow-md transform scale-105"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#8B4513] hover:text-[#8B4513]"
+                }`}
               >
                 <span className="text-lg">{category.icon}</span>
                 {category.label}
@@ -232,73 +239,82 @@ const MenuPage = () => {
         {!loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {sortedItems.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col"
-            >
-              {/* Image Area */}
-              <div className="relative h-48 bg-[#F5F5F5] rounded-t-2xl overflow-hidden flex items-center justify-center p-6">
-                <div className="absolute inset-0 bg-[#8B4513]/5 group-hover:bg-[#8B4513]/10 transition-colors"></div>
-                {item.image && (item.image.startsWith('http') || item.image.startsWith('/uploads')) ? (
-                  <img 
-                    src={item.image.startsWith('/uploads') ? `http://localhost:5000${item.image}` : item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                  />
-                ) : (
-                  <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500 drop-shadow-sm filter">
-                    {item.image || "☕"}
-                  </span>
-                )}
-
-                {/* Badges */}
-                <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
-                  {item.popular && (
-                    <span className="bg-[#DEB887] text-[#5D4037] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                      Popular
+              <div
+                key={item.id}
+                className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col"
+              >
+                {/* Image Area */}
+                <div className="relative h-48 bg-[#F5F5F5] rounded-t-2xl overflow-hidden flex items-center justify-center p-6">
+                  <div className="absolute inset-0 bg-[#8B4513]/5 group-hover:bg-[#8B4513]/10 transition-colors"></div>
+                  {item.image &&
+                  (item.image.startsWith("http") ||
+                    item.image.startsWith("/uploads")) ? (
+                    <img
+                      src={
+                        item.image.startsWith("/uploads")
+                          ? `https://cafeserver.novaitsolutionnp.com:3000${item.image}`
+                          : item.image
+                      }
+                      alt={item.name}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <span className="text-6xl transform group-hover:scale-110 transition-transform duration-500 drop-shadow-sm filter">
+                      {item.image || "☕"}
                     </span>
                   )}
-                  {item.featured && (
-                    <span className="bg-[#8B4513] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
-                      Featured
-                    </span>
-                  )}
-                </div>
-              </div>
 
-              {/* Content */}
-              <div className="p-5 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-serif font-bold text-gray-900 text-lg leading-tight group-hover:text-[#8B4513] transition-colors">{item.name}</h3>
-                  <span className="font-bold text-[#8B4513] text-lg bg-[#FAF9F6] px-2 py-0.5 rounded-md">
-                    ${item.price.toFixed(2)}
-                  </span>
-                </div>
-
-                <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
-                  {item.description}
-                </p>
-
-                <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
-                  <StarRating rating={item.rating} />
-
-                  <button
-                    onClick={() => handleAddToCart(item)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${addedItems[item.id]
-                      ? "bg-green-500 text-white transform scale-110"
-                      : "bg-white text-gray-900 border border-gray-200 hover:bg-[#8B4513] hover:text-white hover:border-[#8B4513]"
-                      }`}
-                  >
-                    {addedItems[item.id] ? (
-                      <FaCheck size={14} />
-                    ) : (
-                      <FaPlus size={12} />
+                  {/* Badges */}
+                  <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+                    {item.popular && (
+                      <span className="bg-[#DEB887] text-[#5D4037] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                        Popular
+                      </span>
                     )}
-                  </button>
+                    {item.featured && (
+                      <span className="bg-[#8B4513] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                        Featured
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-serif font-bold text-gray-900 text-lg leading-tight group-hover:text-[#8B4513] transition-colors">
+                      {item.name}
+                    </h3>
+                    <span className="font-bold text-[#8B4513] text-lg bg-[#FAF9F6] px-2 py-0.5 rounded-md">
+                      ${item.price.toFixed(2)}
+                    </span>
+                  </div>
+
+                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                    <StarRating rating={item.rating} />
+
+                    <button
+                      onClick={() => handleAddToCart(item)}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 shadow-md ${
+                        addedItems[item.id]
+                          ? "bg-green-500 text-white transform scale-110"
+                          : "bg-white text-gray-900 border border-gray-200 hover:bg-[#8B4513] hover:text-white hover:border-[#8B4513]"
+                      }`}
+                    >
+                      {addedItems[item.id] ? (
+                        <FaCheck size={14} />
+                      ) : (
+                        <FaPlus size={12} />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
           </div>
         )}
 
@@ -307,10 +323,12 @@ const MenuPage = () => {
           <div className="text-center py-20">
             <div className="text-6xl mb-4 opacity-20 filter grayscale">☕</div>
             <h3 className="text-xl font-bold text-gray-400 mb-2 font-serif">
-              {products.length === 0 ? "No Products Available" : "No items found"}
+              {products.length === 0
+                ? "No Products Available"
+                : "No items found"}
             </h3>
             <p className="text-gray-400">
-              {products.length === 0 
+              {products.length === 0
                 ? "Products will appear here once the admin adds them to the menu."
                 : "We couldn't find any items matching your search."}
             </p>
@@ -321,8 +339,11 @@ const MenuPage = () => {
       {/* Floating Cart Button */}
       <div className="fixed bottom-8 right-8 z-40">
         <button
-          className={`${cartCount > 0 ? "bg-[#8B4513] hover:bg-[#A0522D] shadow-2xl scale-100" : "bg-gray-400 scale-95 opacity-80"
-            } text-white pl-6 pr-2 py-2 rounded-full font-bold flex items-center gap-3 transition-all transform hover:-translate-y-1`}
+          className={`${
+            cartCount > 0
+              ? "bg-[#8B4513] hover:bg-[#A0522D] shadow-2xl scale-100"
+              : "bg-gray-400 scale-95 opacity-80"
+          } text-white pl-6 pr-2 py-2 rounded-full font-bold flex items-center gap-3 transition-all transform hover:-translate-y-1`}
           disabled={cartCount === 0}
           onClick={() => cartCount > 0 && navigate("/cart")}
         >

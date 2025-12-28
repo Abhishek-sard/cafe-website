@@ -437,7 +437,7 @@ const AdminDashboard = () => {
                                 {product.image && (product.image.startsWith('http') || product.image.startsWith('/uploads')) ? (
                                     <img
                                         src={product.image.startsWith('/uploads')
-                                            ? `http://localhost:5000${product.image}`
+                                            ? `https://cafeserver.novaitsolutionnp.com:3000${product.image}`
                                             : product.image}
                                         alt={product.name}
                                         className="h-40 w-full object-cover rounded mb-4"

@@ -1,16 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseURL = "http://localhost:5000/api";
+const baseURL = "https://cafeserver.novaitsolutionnp.com:3000/api";
 
 const axiosInstance = axios.create({
-    baseURL,
-    withCredentials: true,
+  baseURL,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accesstoken');
-    if(token) config.headers["Authorization"] = `Bearer ${token}`;
-    return config;
+  const token = localStorage.getItem("accesstoken");
+  if (token) config.headers["Authorization"] = `Bearer ${token}`;
+  return config;
 });
 
 axiosInstance.interceptors.response.use(
