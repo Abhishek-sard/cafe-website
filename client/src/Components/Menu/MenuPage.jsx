@@ -252,7 +252,7 @@ const MenuPage = () => {
                     <img
                       src={
                         item.image.startsWith("/uploads")
-                          ? `https://cafeserver.novaitsolutionnp.com:3000${item.image}`
+                          ? `https://cafeserver.novaitsolutionnp.com${item.image}`
                           : item.image
                       }
                       alt={item.name}

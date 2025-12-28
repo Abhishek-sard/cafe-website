@@ -176,7 +176,7 @@ const Navbar = () => {
                     <img
                       src={
                         userImage.startsWith("/uploads")
-                          ? `https://cafeserver.novaitsolutionnp.com:3000${userImage}`
+                          ? `https://cafeserver.novaitsolutionnp.com${userImage}`
                           : userImage
                       }
                       alt={userName}
@@ -269,7 +269,7 @@ const Navbar = () => {
                     <img
                       src={
                         userImage.startsWith("/uploads")
-                          ? `https://cafeserver.novaitsolutionnp.com:3000${userImage}`
+                          ? `https://cafeserver.novaitsolutionnp.com${userImage}`
                           : userImage
                       }
                       alt={userName}

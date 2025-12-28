@@ -136,7 +136,7 @@ const BestSellers = () => {
                         <img
                           src={
                             product.image.startsWith("/uploads")
-                              ? `https://cafeserver.novaitsolutionnp.com:3000${product.image}`
+                              ? `https://cafeserver.novaitsolutionnp.com${product.image}`
                               : product.image
                           }
                           alt={product.title}
