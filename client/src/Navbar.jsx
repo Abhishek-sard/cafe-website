@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaCoffee,
@@ -26,9 +26,11 @@ const Navbar = () => {
   const location = useLocation();
 
   // Close mobile menu on route change
-  useEffect(() => {
-    setIsMenuOpen(false);
-    setDropdownOpen(false);
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      setIsMenuOpen(false);
+      setDropdownOpen(false);
+    }, 0);
   }, [location]);
   const navigate = useNavigate();
 
@@ -204,9 +206,8 @@ const Navbar = () => {
               </Link>
             )}
 
-            {/* Mobile toggle */}
             <button
-              className="md:hidden flex flex-col gap-[6px]"
+              className="md:hidden flex flex-col gap-1.5"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <span className="w-7 h-[3px] bg-[#8B4513] rounded"></span>
