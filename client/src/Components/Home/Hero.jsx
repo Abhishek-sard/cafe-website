@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import HEROIMAGE from "../../assets/hero-cafe.png";
 
 const statsData = [
   { label: "Premium Blends", end: 50 },
@@ -33,7 +34,7 @@ const Hero = () => {
       {/* Background Image */}
       <img
         className="absolute top-0 left-0 w-full h-full object-cover z-0"
-        src="/src/assets/hero-cafe.png"
+        src={HEROIMAGE}
         alt="Elite Cafe Hero"
       />
 
@@ -42,13 +43,13 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-20 px-4 max-w-4xl mx-auto space-y-6 animate-fade-in-up">
-
         <h1 className="text-4xl md:text-7xl font-bold font-serif leading-tight tracking-tight drop-shadow-lg">
           Savor the <span className="text-[#DEB887]">Moment</span>
         </h1>
 
         <p className="text-lg md:text-2xl font-light text-gray-200 max-w-2xl mx-auto drop-shadow-md">
-          Experience the rich, bold flavors of our handcrafted blends—brewed to perfection for the true coffee connoisseur.
+          Experience the rich, bold flavors of our handcrafted blends—brewed to
+          perfection for the true coffee connoisseur.
         </p>
 
         {/* Buttons */}
@@ -80,7 +81,6 @@ const Hero = () => {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
